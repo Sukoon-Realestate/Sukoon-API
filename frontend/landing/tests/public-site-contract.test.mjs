@@ -1,53 +1,14 @@
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { dirname, extname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { Script } from 'node:vm';
 import { test } from 'node:test';
 import React from 'react';
+import { source } from './source-loader.mjs';
 import { renderToStaticMarkup } from 'react-dom/server';
-import ts from 'typescript';
 
 // Use the existing node:test runner. Compile actual TSX modules in memory so
 // these contract checks need neither a Next build nor a browser. Only build
 // artifacts (CSS, images and next/font) are substituted; page, layout, routing,
 // dictionaries, sections, header, footer and form implementations execute.
-const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const cache = new Map();
-function loadSource(filename) {
-  if (cache.has(filename)) return cache.get(filename).exports;
-  const compiledModule = { exports: {} };
-  cache.set(filename, compiledModule);
-  const native = createRequire(filename);
-  const localRequire = (name) => {
-    if (name === 'next/font/google') {
-      return new Proxy({}, { get: (_, key) => key === '__esModule' ? false : () => ({ variable: 'test-font' }) });
-    }
-    if (name.endsWith('.css')) return {};
-    if (/\.(png|jpg|webp|svg)$/.test(name)) return { src: '/test-asset.png', width: 200, height: 100 };
-    if (name.startsWith('@/') || name.startsWith('.')) {
-      const sourceRoot = filename.startsWith(resolve(project, '../src') + '/')
-        ? resolve(project, '../src') : resolve(project, 'src');
-      const base = name.startsWith('@/') ? resolve(sourceRoot, name.slice(2)) : resolve(dirname(filename), name);
-      const path = [base, `${base}.ts`, `${base}.tsx`, `${base}.js`, resolve(base, 'index.ts')]
-        .find((candidate) => existsSync(candidate) && extname(candidate));
-      if (!path) throw new Error(`Cannot resolve ${name} from ${filename}`);
-      if (/\.tsx?$/.test(path)) return loadSource(path);
-      return native(path);
-    }
-    return native(name);
-  };
-  const { outputText } = ts.transpileModule(readFileSync(filename, 'utf8'), {
-    fileName: filename,
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022,
-      jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
-  });
-  new Script(`(function(require,module,exports){${outputText}\n})`, { filename })
-    .runInThisContext()(localRequire, compiledModule, compiledModule.exports);
-  return compiledModule.exports;
-}
-const source = (path) => loadSource(resolve(project, 'src', path));
 const page = source('app/(landing)/[lang]/page.tsx');
 const layout = source('app/(landing)/[lang]/layout.tsx');
 const { proxy } = source('proxy.ts');
@@ -161,20 +122,22 @@ test('unconfigured checkout origin uses the canonical API with one path separato
   });
 });
 
-test('footer exposes only configured HTTPS legal destinations and a real contact; unavailable links stay inert', () => {
+test('footer uses localized published policies and support when external HTTPS overrides are unavailable', () => {
   for (const lang of ['ar', 'en']) {
     const dict = getDictionary(lang);
     for (const invalid of [undefined, 'http://unsafe.test', 'javascript:alert(1)', '/privacy']) {
       withEnvironment({ NEXT_PUBLIC_PRIVACY_URL: invalid, NEXT_PUBLIC_TERMS_URL: invalid }, () => {
-        const html = renderToStaticMarkup(React.createElement(SiteFooter, { dict }));
+        const html = renderToStaticMarkup(React.createElement(SiteFooter, { dict, lang }));
         const links = tags(html, 'a');
-        assert.equal((html.match(/aria-disabled="true"/g) ?? []).length, 2);
-        assert.ok(links.some((link) => link.href === 'mailto:info@sukoon.rent'));
+        for (const route of ['privacy', 'terms', 'delete-account', 'support']) {
+          assert.ok(links.some(link => link.href === `/${lang}/${route}`), `${lang}/${route}`);
+        }
+        assert.ok(!links.some(link => link.href?.includes('/undefined/')));
         assert.ok(!links.some((link) => link.href === invalid));
       });
     }
     withEnvironment({ NEXT_PUBLIC_PRIVACY_URL: 'https://legal.example.test/privacy', NEXT_PUBLIC_TERMS_URL: 'https://legal.example.test/terms' }, () => {
-      const links = tags(renderToStaticMarkup(React.createElement(SiteFooter, { dict })), 'a');
+      const links = tags(renderToStaticMarkup(React.createElement(SiteFooter, { dict, lang })), 'a');
       assert.ok(links.some((link) => link.href === 'https://legal.example.test/privacy'));
       assert.ok(links.some((link) => link.href === 'https://legal.example.test/terms'));
       for (const link of links.filter((link) => link.target === '_blank')) {

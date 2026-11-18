@@ -1,0 +1,18 @@
+Native background request called Flutter test expect() during a guarded async tester operation. This throws TestAsyncUtils.guardSync and is normalized into the generic request failure. Record method in the fixture; assert GET in the test body after preparation.
+
+#0      TestAsyncUtils.guardSync (package:flutter_test/src/test_async_utils.dart:312:5)
+#1      expect (package:flutter_test/src/widget_tester.dart:472:18)
+#2      _AccountStatsRepository.crudCall (file:///private/tmp/sprint3-final-snapshot/apps/sokoun_app/test/workspace_navigation_test.dart:1580:7)
+#3      BaseCrudUseCase.call (package:melos_core/core/base_crud/code/domain/usecases/base_crud.dart:30:39)
+#4      ProfileDeleteAccountCubit.load.<anonymous closure> (package:sokoun_app/features/shared/profile/presentation/cubits/profile_delete_account_cubit.dart:52:42)
+#5      AsyncCubit._executeOperation.<anonymous closure> (package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart:327:53)
+#6      _rootRun (dart:async/zone_root.dart:35:13)
+#7      _CustomZone.run (dart:async/zone.dart:810:35)
+#8      _runZoned (dart:async/zone_api.dart:165:6)
+#9      runZoned (dart:async/zone_api.dart:91:10)
+#10     ReadRequestScope.run (package:melos_core/core/network/read_request_scope.dart:16:39)
+#11     AsyncCubit._basicOperation (package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart:378:34)
+#12     AsyncCubit._executeOperation (package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart:326:9)
+#13     AsyncCubit.executeAsyncWithBaseModel (package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart:273:12)
+#14     ProfileDeleteAccountCubit.load (package:sokoun_app/features/shared/profile/presentation/cubits/profile_delete_account_cubit.dart:51:13)
+<asynchronous suspension>

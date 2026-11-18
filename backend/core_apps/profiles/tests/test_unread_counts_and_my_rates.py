@@ -4,7 +4,8 @@ from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 
-from core_apps.chat.models.conversation import Conversation, ConversationParticipant
+from core_apps.chat.models import Message
+from core_apps.chat.services.message_service import get_or_create_direct_conversation
 from core_apps.notifications.models import Notification
 from core_apps.properties.models import (
     City,
@@ -65,11 +66,15 @@ class TestUnreadCountsAndMyRates:
             is_read=False,
         )
 
-        # 4. Add unread chat message count via ConversationParticipant
-        convo = Conversation.objects.create()
-        ConversationParticipant.objects.create(
-            conversation=convo, user=user, unread_count=3
+        # 4. Count actual incoming messages in this owner's workspace.
+        convo = get_or_create_direct_conversation(
+            user=user, other_user=another_user, workspace="owner"
         )
+        convo.participant_set.filter(user=user).update(unread_count=43)
+        Message.objects.bulk_create([
+            Message(conversation=convo, sender=another_user, sequence=i + 1, content="Unread")
+            for i in range(3)
+        ])
 
         url = reverse("owner-unread-counts")
         res = auth_client.get(url)

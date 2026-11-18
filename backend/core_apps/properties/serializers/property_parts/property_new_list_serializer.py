@@ -7,6 +7,7 @@ from core_apps.chat.moderation.property_projection import (
 from rest_framework import serializers
 from core_apps.profiles.serializers import CloudinarySerializerField
 from ...models import Property
+from ...amenities import property_amenities
 from .property_list_serializer import build_rental_summary
 from .property_collection import PropertyCollectionSerializer
 
@@ -24,6 +25,7 @@ class PropertyNewListSerializer(PropertyPolicyProjection, serializers.ModelSeria
     images_count = serializers.IntegerField(read_only=True)
     location = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
+    amenities = serializers.SerializerMethodField()
     rental_schema_version = serializers.SerializerMethodField()
     rental_summary = serializers.SerializerMethodField()
     is_sponsored = serializers.BooleanField(read_only=True, default=False)
@@ -44,12 +46,16 @@ class PropertyNewListSerializer(PropertyPolicyProjection, serializers.ModelSeria
             "bathrooms",
             "area",
             "tags",
+            "amenities",
             "price",
             "price_period",
             "rental_schema_version",
             "rental_summary",
             "is_sponsored",
         ]
+
+    def get_amenities(self, obj: Property) -> list[str]:
+        return property_amenities(obj)
 
     def get_location(self, obj: Property) -> str:
         return f"{obj.district}, {obj.city.name}, {obj.governorate.name}"
@@ -148,5 +154,5 @@ class PropertyDetailOwnerSerializer(serializers.Serializer):
     id = serializers.UUIDField(read_only=True)
     full_name = serializers.CharField(source="get_full_name", read_only=True)
     name = serializers.CharField(source="get_full_name", read_only=True)
-    avatar = CloudinarySerializerField(source="profile.avatar", read_only=True)
+    avatar = CloudinarySerializerField(source="profile.avatar_url", read_only=True)
     is_verified = serializers.BooleanField(read_only=True)

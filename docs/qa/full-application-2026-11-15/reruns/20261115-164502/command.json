@@ -1,0 +1,13 @@
+{
+  "cwd": "/Users/demo23home/code/sukoon/sokoun/apps/sokoun_app",
+  "argv": [
+    "flutter",
+    "test",
+    "--no-pub",
+    "--timeout",
+    "60s",
+    "--reporter",
+    "expanded",
+    "test/company_role_work_status_test.dart"
+  ]
+}

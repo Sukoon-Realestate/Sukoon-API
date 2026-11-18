@@ -40,3 +40,20 @@ print(json.dumps({'loads': len(seen)}))
     assert result.returncode == 0, result.stderr
     expected = 0 if disabled in {"1", "true", "yes"} else 1 if module == "base" else 2
     assert json.loads(result.stdout)["loads"] == expected
+
+
+def test_static_storage_retains_compressed_manifest_backend():
+    """Framework upgrades must preserve hashed/compressed production assets."""
+    result = subprocess.run(
+        [sys.executable, "-c", """
+from django.core.files.storage import storages
+print(type(storages['staticfiles']).__module__ + '.' + type(storages['staticfiles']).__name__)
+"""],
+        cwd=Path(__file__).resolve().parents[2],
+        env={**os.environ, "DOTENV_DISABLED": "1", "DJANGO_SETTINGS_MODULE": "config.settings.base"},
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "whitenoise.storage.CompressedManifestStaticFilesStorage"

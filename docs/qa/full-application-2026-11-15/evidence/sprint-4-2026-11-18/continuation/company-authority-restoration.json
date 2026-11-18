@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "result": "passed",
+  "transport": "loopback_http",
+  "release_mode": "restoration",
+  "security_test_bypass": false,
+  "scenario": "company_role_scope_and_current_membership",
+  "prerequisites": "synthetic accounts/company/memberships seeded; no financial or provider transitions",
+  "assertions": [
+    "discovery_minimizes_private_data",
+    "outsider_discovery_empty",
+    "explicit_role_contexts",
+    "employee_role_spoof_rejected",
+    "outsider_role_spoof_rejected",
+    "revocation_effective_next_request",
+    "other_member_access_preserved"
+  ],
+  "source_sha256": {
+    "core_apps/common/test_connected_company_acceptance.py": "1c0e65a8366c0659c23d97a802cf546efe5c8ddd6f8721e81ec9d5cc3e53c640",
+    "tools/qa/connected_http.py": "f77f62f264aa3c61cea875e1daeb3472d0ab0a2487be8222f816224e0b6700d4",
+    "core_apps/features/company_views.py": "43ae21e02fd3953d949da29a67a4b72099c208b5b2df49a9f95257d2e12ad633",
+    "core_apps/features/services/company/role_context.py": "13691f084dfa1f2f07a517041cf92de9790fe7df93a43e3aa5d005a96c29b4ca",
+    "core_apps/features/services/company/role_routes.py": "a7d35ad621bb3d8abd8e027fd058101f83f5e9dc4c281131d1dce6d154772ebf"
+  },
+  "observations": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/companies/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/companies/{company_id}/role-contexts/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/companies/{company_id}/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/companies/{company_id}/",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/companies/{company_id}/role-contexts/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/companies/{company_id}/",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/companies/{company_id}/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/companies/{company_id}/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/companies/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/companies/{company_id}/",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/companies/",
+      "status": 200
+    }
+  ]
+}

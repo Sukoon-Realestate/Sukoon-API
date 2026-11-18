@@ -53,6 +53,9 @@ class OwnedAvatarField(CloudinarySerializerField):
             current = getattr(getattr(self.parent, "instance", None), "avatar", None)
             if current and _same_asset(current, data):
                 return current
+            profile = getattr(self.parent, "instance", None)
+            if not current and data == getattr(profile, "google_avatar_url", None):
+                return None
             raise serializers.ValidationError(
                 "Upload the image itself; existing provider references cannot be attached."
             )
@@ -100,7 +103,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(source="user.date_joined", read_only=True)
     phone_number = PhoneNumberField(read_only=True)
     city = ProfileCitySerializer(read_only=True)
-    avatar = CloudinarySerializerField(read_only=True)
+    avatar = CloudinarySerializerField(source="avatar_url", read_only=True)
     id_face = serializers.SerializerMethodField()
     id_back = serializers.SerializerMethodField()
     confirmation_selfi = serializers.SerializerMethodField()
@@ -164,6 +167,7 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
+        data["avatar"] = instance.avatar_url
         for field in ("id_face", "id_back", "confirmation_selfi"):
             data[field] = ProfileSerializer._identity_url(self, instance, field)
         return data

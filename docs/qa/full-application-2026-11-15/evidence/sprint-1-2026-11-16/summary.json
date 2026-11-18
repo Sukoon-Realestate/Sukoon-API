@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-16",
+  "deployed": false,
+  "local_fixed": [
+    "MOB-001",
+    "PRIV-001",
+    "ADM-001"
+  ],
+  "partial": [
+    "WEB-001",
+    "SEC-001"
+  ],
+  "open": [
+    "MOB-002",
+    "HOST-001",
+    "SEC-002",
+    "QA-001",
+    "QA-002"
+  ],
+  "tests": {
+    "mobile_focused_pass": 15,
+    "mobile_broader_pass": 79,
+    "mobile_broader_fail": 1,
+    "navigation_pass": 2,
+    "postgres_pass": 17,
+    "admin_pass": 60,
+    "merged_build_config_pass": 3
+  },
+  "production_builds": {
+    "webpack": "passed both",
+    "turbopack": "environment port binding failure"
+  },
+  "hosted": {
+    "pass": 54,
+    "total": 56
+  },
+  "original_reproductions": {
+    "accepted_transport_fail": 4,
+    "bilingual_privacy_fail": 2,
+    "reputation_fail": 2,
+    "store_availability_fail": 2
+  }
+}

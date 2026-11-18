@@ -225,9 +225,10 @@ def test_unpublish_revokes_existing_credentials_and_preview_is_owner_only(
 def test_reviewer_console_requires_staff_and_hash_bound_decision(
     api_client, property_obj, user, superuser, settings
 ):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     tour, revision, variant = ready_variant(property_obj)
     revision.review_state = "pending"
     revision.save()

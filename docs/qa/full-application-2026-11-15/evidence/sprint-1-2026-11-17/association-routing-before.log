@@ -1,0 +1,31 @@
+✖ public link host proxies both exact association paths without a redirect or added slash (45.409167ms)
+✔ association proxy preserves isolated and invalid-origin behavior (22.993625ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 316.474417
+
+✖ failing tests:
+
+test at tests/association-routing.test.cjs:21:1
+✖ public link host proxies both exact association paths without a redirect or added slash (45.409167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + undefined
+  - 'https://api.example.test/.well-known/assetlinks.json'
+
+      at TestContext.<anonymous> (/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/association-routing.test.cjs:25:12)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'https://api.example.test/.well-known/assetlinks.json',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

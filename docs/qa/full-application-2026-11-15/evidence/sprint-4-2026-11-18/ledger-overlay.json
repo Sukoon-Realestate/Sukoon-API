@@ -1,0 +1,266 @@
+{
+  "schema_version": 1,
+  "ledger_sha256": "fcadd89d76ceb0b2d8938f5c5bfebf05b1018dfccad0958b787148cebc987827",
+  "scope": "loopback HTTP backend entry observations; UI journeys remain unverified",
+  "summary": {
+    "ledger_cases": 6449,
+    "backend_entries_observed_partial": 4,
+    "cases_without_new_observations": 6445,
+    "ui_journeys_verified": 0,
+    "hosted_or_provider_acceptance_verified": 0
+  },
+  "entries": [
+    {
+      "case_id": "SRV-9e70aed79f523b-entry",
+      "status": "observed_partial",
+      "baseline_source_fingerprint": "bb51a7727cd141f76d514721b96ad836c7ef3052c70ebc087d002d3b2b509e50",
+      "observations": [
+        {
+          "artifact": "cookie-acceptance-mvp.json",
+          "artifact_sha256": "b11f230a0dba317369c9a8da41e9a6ad4929ee77b34917993a30cf17cba11415",
+          "release_mode": "mvp",
+          "transport": "loopback_http",
+          "observations": [
+            {
+              "method": "POST",
+              "path": "/api/v1/auth/login/",
+              "status": 200
+            },
+            {
+              "method": "POST",
+              "path": "/api/v1/auth/login/",
+              "status": 200
+            }
+          ]
+        },
+        {
+          "artifact": "cookie-acceptance-restoration.json",
+          "artifact_sha256": "0b63a994ae452dfe966a769e901e1cd01e45487ff24d7603dd81960138e402ab",
+          "release_mode": "restoration",
+          "transport": "loopback_http",
+          "observations": [
+            {
+              "method": "POST",
+              "path": "/api/v1/auth/login/",
+              "status": 200
+            },
+            {
+              "method": "POST",
+              "path": "/api/v1/auth/login/",
+              "status": 200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "SRV-d1afcfe7b85756-entry",
+      "status": "observed_partial",
+      "baseline_source_fingerprint": "d0b9b3a5b2e2c2078027d4c505af0440c0317636227c1aa60199c0c615ae56b7",
+      "observations": [
+        {
+          "artifact": "cookie-acceptance-mvp.json",
+          "artifact_sha256": "b11f230a0dba317369c9a8da41e9a6ad4929ee77b34917993a30cf17cba11415",
+          "release_mode": "mvp",
+          "transport": "loopback_http",
+          "observations": [
+            {
+              "method": "POST",
+              "path": "/api/v1/auth/logout/",
+              "status": 200
+            }
+          ]
+        },
+        {
+          "artifact": "cookie-acceptance-restoration.json",
+          "artifact_sha256": "0b63a994ae452dfe966a769e901e1cd01e45487ff24d7603dd81960138e402ab",
+          "release_mode": "restoration",
+          "transport": "loopback_http",
+          "observations": [
+            {
+              "method": "POST",
+              "path": "/api/v1/auth/logout/",
+              "status": 200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "SRV-a21687ccc522fa-entry",
+      "status": "observed_partial",
+      "baseline_source_fingerprint": "15459660f24cec099b1bcc48335e80027035586fa4bdb08551f1a9878c7b1e0a",
+      "observations": [
+        {
+          "artifact": "cookie-acceptance-mvp.json",
+          "artifact_sha256": "b11f230a0dba317369c9a8da41e9a6ad4929ee77b34917993a30cf17cba11415",
+          "release_mode": "mvp",
+          "transport": "loopback_http",
+          "observations": [
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 401
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 401
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 401
+            }
+          ]
+        },
+        {
+          "artifact": "cookie-acceptance-restoration.json",
+          "artifact_sha256": "0b63a994ae452dfe966a769e901e1cd01e45487ff24d7603dd81960138e402ab",
+          "release_mode": "restoration",
+          "transport": "loopback_http",
+          "observations": [
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 401
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 401
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/my-account/",
+              "status": 401
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "SRV-2afc84c3994000-entry",
+      "status": "observed_partial",
+      "baseline_source_fingerprint": "804e5653ef46c152d0f2dc0e7a24203fe82335ef60123706e4c8d040fe3d3dcf",
+      "observations": [
+        {
+          "artifact": "cookie-acceptance-mvp.json",
+          "artifact_sha256": "b11f230a0dba317369c9a8da41e9a6ad4929ee77b34917993a30cf17cba11415",
+          "release_mode": "mvp",
+          "transport": "loopback_http",
+          "observations": [
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            },
+            {
+              "method": "PATCH",
+              "path": "/api/v1/profiles/settings/",
+              "status": 403
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            },
+            {
+              "method": "PATCH",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            }
+          ]
+        },
+        {
+          "artifact": "cookie-acceptance-restoration.json",
+          "artifact_sha256": "0b63a994ae452dfe966a769e901e1cd01e45487ff24d7603dd81960138e402ab",
+          "release_mode": "restoration",
+          "transport": "loopback_http",
+          "observations": [
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            },
+            {
+              "method": "PATCH",
+              "path": "/api/v1/profiles/settings/",
+              "status": 403
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            },
+            {
+              "method": "PATCH",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            },
+            {
+              "method": "GET",
+              "path": "/api/v1/profiles/settings/",
+              "status": 200
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

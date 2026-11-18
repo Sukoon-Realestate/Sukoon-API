@@ -1,0 +1,266 @@
+.................                                                        [100%]
+=============================== warnings summary ===============================
+core_apps/properties/models/property.py:200
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/property.py:200: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/property.py:204
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/property.py:204: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/property.py:208
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/property.py:208: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/portfolio.py:73
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/portfolio.py:73: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/portfolio.py:121
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/portfolio.py:121: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/portfolio.py:162
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/portfolio.py:162: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/engagement.py:93
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/engagement.py:93: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit.py:222
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit.py:222: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit.py:225
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit.py:225: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:39
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:39: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:43
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:43: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:47
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:47: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:51
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:51: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/saved_search_visit.py:58
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/saved_search_visit.py:58: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/availability_closure.py:15
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/availability_closure.py:15: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraints = [models.CheckConstraint(check=models.Q(ends_at__gt=models.F('starts_at')),
+
+core_apps/chat/models/conversation.py:49
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/chat/models/conversation.py:49: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/admin_api/models/platform_preferences.py:28
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/admin_api/models/platform_preferences.py:28: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/agreements.py:130
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/agreements.py:130: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/rental_experiences.py:44
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/rental_experiences.py:44: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/rental_experiences.py:49
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/rental_experiences.py:49: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/rental_experiences.py:141
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/rental_experiences.py:141: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:78
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:78: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:83
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:83: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:86
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:86: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:245
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:245: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:248
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:248: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/invoices.py:134
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/invoices.py:134: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/condition.py:58
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/condition.py:58: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/documents.py:92
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/documents.py:92: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:35
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:35: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:39
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:39: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:43
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:43: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:87
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:87: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/planning_models_parts/roommate_connection.py:54
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/planning_models_parts/roommate_connection.py:54: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/catalog_models.py:24
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/catalog_models.py:24: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(check=models.Q(currency="EGP", exponent=2), name="promotion_supported_money"),
+
+core_apps/features/catalog_models.py:25
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/catalog_models.py:25: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/summary_sharing.py:34
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/summary_sharing.py:34: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/application_profiles.py:106
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/application_profiles.py:106: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reservations.py:97
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reservations.py:97: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reservations.py:101
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reservations.py:101: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:40
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:40: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:75
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:75: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:118
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:118: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:122
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:122: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:190
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:190: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:220
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:220: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_models.py:174
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_models.py:174: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_models.py:178
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_models.py:178: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_models.py:318
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_models.py:318: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_contract_models.py:43
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_contract_models.py:43: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_contract_models.py:47
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_contract_models.py:47: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:68
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:68: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:73
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:73: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:76
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:76: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:108
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:108: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:158
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:158: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/transition_network_models.py:32
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/transition_network_models.py:32: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/chargebacks.py:52
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/chargebacks.py:52: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/chargebacks.py:56
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/chargebacks.py:56: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_saved_models.py:33
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_saved_models.py:33: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/commerce_models.py:65
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/commerce_models.py:65: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/experience/models.py:66
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/experience/models.py:66: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraints = [models.CheckConstraint(
+
+core_apps/virtual_tours/models.py:68
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/virtual_tours/models.py:68: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+../../../../../../private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/openid/oidutil.py:105
+  /private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/openid/oidutil.py:105: DeprecationWarning: defusedxml.cElementTree is deprecated, import from defusedxml.ElementTree instead.
+    ElementTree = __import__(mod_name, None, None, ['unused'])
+
+core_apps/users/tests/test_provider_registry_compat.py::test_unknown_provider_preserves_validation_precedence[get--400]
+core_apps/users/tests/test_provider_registry_compat.py::test_unknown_provider_preserves_validation_precedence[get-?redirect_uri=https://client.example.test/callback-404]
+core_apps/users/tests/test_provider_registry_compat.py::test_unknown_provider_preserves_validation_precedence[post--404]
+  /private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/staticfiles/
+    mw_instance = middleware(adapted_handler)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+17 passed, 67 warnings in 6.85s

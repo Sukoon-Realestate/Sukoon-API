@@ -63,7 +63,7 @@ def _format_date_label(value):
 
 class OwnerDashboardOwnerSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source="get_full_name", read_only=True)
-    avatar = CloudinarySerializerField(source="profile.avatar", read_only=True)
+    avatar = CloudinarySerializerField(source="profile.avatar_url", read_only=True)
 
     class Meta:
         model = User
@@ -74,7 +74,7 @@ class OwnerDashboardOwnerSerializer(serializers.ModelSerializer):
 class OwnerDashboardPendingVisitSerializer(serializers.ModelSerializer):
     tenant_name = serializers.CharField(source="tenant.get_full_name", read_only=True)
     tenant_avatar = CloudinarySerializerField(
-        source="tenant.profile.avatar", read_only=True
+        source="tenant.profile.avatar_url", read_only=True
     )
     property_title = serializers.CharField(source="property.title", read_only=True)
     property_district = serializers.CharField(

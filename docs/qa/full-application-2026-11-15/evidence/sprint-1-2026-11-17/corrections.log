@@ -1,0 +1,1168 @@
+..FF.................................................................... [ 23%]
+........................................................................ [ 47%]
+........................................................................ [ 71%]
+........................................................................ [ 94%]
+................                                                         [100%]
+=================================== FAILURES ===================================
+________________ test_frozen_commerce_transport_contracts[mvp] _________________
+
+user = <User: user@example.com>
+settings = <pytest_django.fixtures.SettingsWrapper object at 0x12492f550>
+mvp = True
+
+    @pytest.mark.django_db
+    @pytest.mark.parametrize("mvp", [True, False], ids=["mvp", "restoration"])
+    def test_frozen_commerce_transport_contracts(user, settings, mvp):
+        settings.SUKOON_MVP = mvp
+        baseline = EVIDENCE / "transport-before.json"
+        rows = json.loads(baseline.read_text())
+        # The original profile reader allocates an ID on its first GET. Seed the
+        # same synthetic identity so parity compares the complete projection.
+        from core_apps.features.services.rental_phase2 import get_or_create_owner_profile
+        from core_apps.features.models import OwnerPaymentProfile
+
+        identity = next(
+            row["body"]["data"]["id"]
+            for row in rows
+            if row["route"].endswith("/owner-payment-profile/")
+            and row["method"] == "GET"
+            and row["auth"] == "account"
+        )
+        profile = get_or_create_owner_profile(user)
+        OwnerPaymentProfile.objects.filter(pk=profile.pk).update(id=identity)
+        failures = []
+        for expected in rows:
+            # IDs, clocks and throttles have a deterministic fixture lifetime; each
+            # request still runs its real authentication, permissions and parsers.
+            expected = json.loads(
+                json.dumps(expected).replace(
+                    "22222222-2222-4222-8222-222222222222", str(user.id)
+                )
+            )
+            for cache in caches.all():
+                cache.clear()
+            url = "/" + re.sub(
+                r"<([^:>]+):([^>]+)>",
+                lambda m: (
+                    "11111111-1111-4111-8111-111111111111"
+                    if m[1] == "uuid"
+                    else "1" if m[1] == "int" else "missing"
+                ),
+                expected["route"],
+            )
+            match = resolve(url)
+            method = expected["method"]
+            request = APIRequestFactory().generic(
+                method,
+                url,
+                data=b"{}" if method not in {"GET", "HEAD", "OPTIONS"} else b"",
+                content_type="application/json",
+                HTTP_ACCEPT_LANGUAGE=expected["locale"],
+            )
+            request.resolver_match = match
+            if expected["auth"] == "account":
+                force_authenticate(request, user=user)
+            with override(expected["locale"]), patch(
+                "django.utils.timezone.now",
+                return_value=datetime(2026, 11, 12, 12, tzinfo=timezone.utc),
+            ):
+                response = match.func(request, **match.kwargs)
+            if hasattr(response, "render"):
+                response.render()
+            actual = {
+                "status": response.status_code,
+                "body": (
+                    json.loads(response.content)
+                    if response.get("Content-Type", "").startswith("application/json")
+                    else response.content.decode()
+                ),
+                "headers": {key: response.get(key) for key in expected["headers"]},
+            }
+            wanted = drf_318_contract({key: expected[key] for key in actual})
+            for value in (actual, wanted):
+                if value["headers"].get("Allow"):
+                    value["headers"]["Allow"] = sorted(
+                        value["headers"]["Allow"].split(", ")
+                    )
+            if actual != wanted:
+                failures.append(
+                    {
+                        "route": expected["route"],
+                        "method": method,
+                        "auth": expected["auth"],
+                        "locale": expected["locale"],
+                        "expected": wanted,
+                        "actual": actual,
+                    }
+                )
+>       assert not failures, json.dumps(failures[:5], ensure_ascii=False, indent=2)
+E       AssertionError: [
+E           {
+E             "route": "api/v1/advertising/v1/plans/",
+E             "method": "GET",
+E             "auth": "anonymous",
+E             "locale": "en",
+E             "expected": {
+E               "status": 200,
+E               "body": {
+E                 "message": "Available plans.",
+E                 "data": [
+E                   {
+E                     "id": "weekly",
+E                     "title": "Weekly",
+E                     "duration_unit": "week",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 100000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "monthly",
+E                     "title": "Monthly",
+E                     "duration_unit": "calendar_month",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 300000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "yearly",
+E                     "title": "Yearly",
+E                     "duration_unit": "calendar_year",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 3000000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   }
+E                 ]
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             },
+E             "actual": {
+E               "status": 200,
+E               "body": {
+E                 "message": "Available plans.",
+E                 "data": []
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             }
+E           },
+E           {
+E             "route": "api/v1/advertising/v1/plans/",
+E             "method": "GET",
+E             "auth": "anonymous",
+E             "locale": "ar",
+E             "expected": {
+E               "status": 200,
+E               "body": {
+E                 "message": "الخطط المتاحة.",
+E                 "data": [
+E                   {
+E                     "id": "weekly",
+E                     "title": "أسبوعية",
+E                     "duration_unit": "week",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 100000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "monthly",
+E                     "title": "شهرية",
+E                     "duration_unit": "calendar_month",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 300000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "yearly",
+E                     "title": "سنوية",
+E                     "duration_unit": "calendar_year",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 3000000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   }
+E                 ]
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             },
+E             "actual": {
+E               "status": 200,
+E               "body": {
+E                 "message": "الخطط المتاحة.",
+E                 "data": []
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             }
+E           },
+E           {
+E             "route": "api/v1/advertising/v1/plans/",
+E             "method": "GET",
+E             "auth": "account",
+E             "locale": "en",
+E             "expected": {
+E               "status": 200,
+E               "body": {
+E                 "message": "Available plans.",
+E                 "data": [
+E                   {
+E                     "id": "weekly",
+E                     "title": "Weekly",
+E                     "duration_unit": "week",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 100000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "monthly",
+E                     "title": "Monthly",
+E                     "duration_unit": "calendar_month",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 300000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "yearly",
+E                     "title": "Yearly",
+E                     "duration_unit": "calendar_year",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 3000000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   }
+E                 ]
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             },
+E             "actual": {
+E               "status": 200,
+E               "body": {
+E                 "message": "Available plans.",
+E                 "data": []
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             }
+E           },
+E           {
+E             "route": "api/v1/advertising/v1/plans/",
+E             "method": "GET",
+E             "auth": "account",
+E             "locale": "ar",
+E             "expected": {
+E               "status": 200,
+E               "body": {
+E                 "message": "الخطط المتاحة.",
+E                 "data": [
+E                   {
+E                     "id": "weekly",
+E                     "title": "أسبوعية",
+E                     "duration_unit": "week",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 100000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "monthly",
+E                     "title": "شهرية",
+E                     "duration_unit": "calendar_month",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 300000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "yearly",
+E                     "title": "سنوية",
+E                     "duration_unit": "calendar_year",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 3000000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   }
+E                 ]
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             },
+E             "actual": {
+E               "status": 200,
+E               "body": {
+E                 "message": "الخطط المتاحة.",
+E                 "data": []
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             }
+E           }
+E         ]
+E       assert not [{'actual': {'body': {'data': [], 'message': 'Available plans.'}, 'headers': {'Allow': ['GET', 'OPTIONS'], 'Cache-Cont...validate', 'Content-Type': 'application/json; charset=utf-8', 'ETag': None, ...}, 'status': 200}, 'locale': 'ar', ...}]
+
+core_apps/features/tests/test_sprint08_transport.py:105: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/return/
+____________ test_frozen_commerce_transport_contracts[restoration] _____________
+
+user = <User: user@example.com>
+settings = <pytest_django.fixtures.SettingsWrapper object at 0x10b351dd0>
+mvp = False
+
+    @pytest.mark.django_db
+    @pytest.mark.parametrize("mvp", [True, False], ids=["mvp", "restoration"])
+    def test_frozen_commerce_transport_contracts(user, settings, mvp):
+        settings.SUKOON_MVP = mvp
+        baseline = EVIDENCE / "transport-before.json"
+        rows = json.loads(baseline.read_text())
+        # The original profile reader allocates an ID on its first GET. Seed the
+        # same synthetic identity so parity compares the complete projection.
+        from core_apps.features.services.rental_phase2 import get_or_create_owner_profile
+        from core_apps.features.models import OwnerPaymentProfile
+
+        identity = next(
+            row["body"]["data"]["id"]
+            for row in rows
+            if row["route"].endswith("/owner-payment-profile/")
+            and row["method"] == "GET"
+            and row["auth"] == "account"
+        )
+        profile = get_or_create_owner_profile(user)
+        OwnerPaymentProfile.objects.filter(pk=profile.pk).update(id=identity)
+        failures = []
+        for expected in rows:
+            # IDs, clocks and throttles have a deterministic fixture lifetime; each
+            # request still runs its real authentication, permissions and parsers.
+            expected = json.loads(
+                json.dumps(expected).replace(
+                    "22222222-2222-4222-8222-222222222222", str(user.id)
+                )
+            )
+            for cache in caches.all():
+                cache.clear()
+            url = "/" + re.sub(
+                r"<([^:>]+):([^>]+)>",
+                lambda m: (
+                    "11111111-1111-4111-8111-111111111111"
+                    if m[1] == "uuid"
+                    else "1" if m[1] == "int" else "missing"
+                ),
+                expected["route"],
+            )
+            match = resolve(url)
+            method = expected["method"]
+            request = APIRequestFactory().generic(
+                method,
+                url,
+                data=b"{}" if method not in {"GET", "HEAD", "OPTIONS"} else b"",
+                content_type="application/json",
+                HTTP_ACCEPT_LANGUAGE=expected["locale"],
+            )
+            request.resolver_match = match
+            if expected["auth"] == "account":
+                force_authenticate(request, user=user)
+            with override(expected["locale"]), patch(
+                "django.utils.timezone.now",
+                return_value=datetime(2026, 11, 12, 12, tzinfo=timezone.utc),
+            ):
+                response = match.func(request, **match.kwargs)
+            if hasattr(response, "render"):
+                response.render()
+            actual = {
+                "status": response.status_code,
+                "body": (
+                    json.loads(response.content)
+                    if response.get("Content-Type", "").startswith("application/json")
+                    else response.content.decode()
+                ),
+                "headers": {key: response.get(key) for key in expected["headers"]},
+            }
+            wanted = drf_318_contract({key: expected[key] for key in actual})
+            for value in (actual, wanted):
+                if value["headers"].get("Allow"):
+                    value["headers"]["Allow"] = sorted(
+                        value["headers"]["Allow"].split(", ")
+                    )
+            if actual != wanted:
+                failures.append(
+                    {
+                        "route": expected["route"],
+                        "method": method,
+                        "auth": expected["auth"],
+                        "locale": expected["locale"],
+                        "expected": wanted,
+                        "actual": actual,
+                    }
+                )
+>       assert not failures, json.dumps(failures[:5], ensure_ascii=False, indent=2)
+E       AssertionError: [
+E           {
+E             "route": "api/v1/advertising/v1/plans/",
+E             "method": "GET",
+E             "auth": "anonymous",
+E             "locale": "en",
+E             "expected": {
+E               "status": 200,
+E               "body": {
+E                 "message": "Available plans.",
+E                 "data": [
+E                   {
+E                     "id": "weekly",
+E                     "title": "Weekly",
+E                     "duration_unit": "week",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 100000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "monthly",
+E                     "title": "Monthly",
+E                     "duration_unit": "calendar_month",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 300000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "yearly",
+E                     "title": "Yearly",
+E                     "duration_unit": "calendar_year",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 3000000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   }
+E                 ]
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             },
+E             "actual": {
+E               "status": 200,
+E               "body": {
+E                 "message": "Available plans.",
+E                 "data": []
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             }
+E           },
+E           {
+E             "route": "api/v1/advertising/v1/plans/",
+E             "method": "GET",
+E             "auth": "anonymous",
+E             "locale": "ar",
+E             "expected": {
+E               "status": 200,
+E               "body": {
+E                 "message": "الخطط المتاحة.",
+E                 "data": [
+E                   {
+E                     "id": "weekly",
+E                     "title": "أسبوعية",
+E                     "duration_unit": "week",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 100000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "monthly",
+E                     "title": "شهرية",
+E                     "duration_unit": "calendar_month",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 300000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "yearly",
+E                     "title": "سنوية",
+E                     "duration_unit": "calendar_year",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 3000000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   }
+E                 ]
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             },
+E             "actual": {
+E               "status": 200,
+E               "body": {
+E                 "message": "الخطط المتاحة.",
+E                 "data": []
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             }
+E           },
+E           {
+E             "route": "api/v1/advertising/v1/plans/",
+E             "method": "GET",
+E             "auth": "account",
+E             "locale": "en",
+E             "expected": {
+E               "status": 200,
+E               "body": {
+E                 "message": "Available plans.",
+E                 "data": [
+E                   {
+E                     "id": "weekly",
+E                     "title": "Weekly",
+E                     "duration_unit": "week",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 100000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "monthly",
+E                     "title": "Monthly",
+E                     "duration_unit": "calendar_month",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 300000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "yearly",
+E                     "title": "Yearly",
+E                     "duration_unit": "calendar_year",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 3000000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   }
+E                 ]
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             },
+E             "actual": {
+E               "status": 200,
+E               "body": {
+E                 "message": "Available plans.",
+E                 "data": []
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             }
+E           },
+E           {
+E             "route": "api/v1/advertising/v1/plans/",
+E             "method": "GET",
+E             "auth": "account",
+E             "locale": "ar",
+E             "expected": {
+E               "status": 200,
+E               "body": {
+E                 "message": "الخطط المتاحة.",
+E                 "data": [
+E                   {
+E                     "id": "weekly",
+E                     "title": "أسبوعية",
+E                     "duration_unit": "week",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 100000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "monthly",
+E                     "title": "شهرية",
+E                     "duration_unit": "calendar_month",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 300000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   },
+E                   {
+E                     "id": "yearly",
+E                     "title": "سنوية",
+E                     "duration_unit": "calendar_year",
+E                     "duration_count": 1,
+E                     "revision": "1",
+E                     "active": true,
+E                     "price": {
+E                       "amount_minor": 3000000,
+E                       "currency": "EGP",
+E                       "exponent": 2
+E                     }
+E                   }
+E                 ]
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             },
+E             "actual": {
+E               "status": 200,
+E               "body": {
+E                 "message": "الخطط المتاحة.",
+E                 "data": []
+E               },
+E               "headers": {
+E                 "Allow": [
+E                   "GET",
+E                   "OPTIONS"
+E                 ],
+E                 "Cache-Control": "private, max-age=300, must-revalidate",
+E                 "Referrer-Policy": null,
+E                 "X-Content-Type-Options": null,
+E                 "Content-Type": "application/json; charset=utf-8",
+E                 "ETag": null
+E               }
+E             }
+E           }
+E         ]
+E       assert not [{'actual': {'body': {'data': [], 'message': 'Available plans.'}, 'headers': {'Allow': ['GET', 'OPTIONS'], 'Cache-Cont...validate', 'Content-Type': 'application/json; charset=utf-8', 'ETag': None, ...}, 'status': 200}, 'locale': 'ar', ...}]
+
+core_apps/features/tests/test_sprint08_transport.py:105: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/webhook/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (OPTIONS): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (HEAD): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/return/
+WARNING  django.request:log.py:253 Method Not Allowed (DELETE): /api/v1/payments/paymob/return/
+=============================== warnings summary ===============================
+core_apps/properties/models/property.py:200
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/property.py:200: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/property.py:204
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/property.py:204: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/property.py:208
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/property.py:208: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/portfolio.py:73
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/portfolio.py:73: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/portfolio.py:121
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/portfolio.py:121: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/portfolio.py:162
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/portfolio.py:162: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/engagement.py:93
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/engagement.py:93: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit.py:222
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit.py:222: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit.py:225
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit.py:225: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:39
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:39: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:43
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:43: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:47
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:47: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:51
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:51: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/saved_search_visit.py:58
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/saved_search_visit.py:58: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/availability_closure.py:15
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/availability_closure.py:15: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraints = [models.CheckConstraint(check=models.Q(ends_at__gt=models.F('starts_at')),
+
+core_apps/chat/models/conversation.py:49
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/chat/models/conversation.py:49: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/admin_api/models/platform_preferences.py:28
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/admin_api/models/platform_preferences.py:28: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/agreements.py:130
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/agreements.py:130: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/rental_experiences.py:44
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/rental_experiences.py:44: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/rental_experiences.py:49
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/rental_experiences.py:49: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/rental_experiences.py:141
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/rental_experiences.py:141: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:78
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:78: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:83
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:83: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:86
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:86: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:245
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:245: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:248
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:248: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/invoices.py:134
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/invoices.py:134: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/condition.py:58
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/condition.py:58: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/documents.py:92
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/documents.py:92: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:35
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:35: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:39
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:39: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:43
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:43: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:87
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:87: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/planning_models_parts/roommate_connection.py:54
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/planning_models_parts/roommate_connection.py:54: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/catalog_models.py:24
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/catalog_models.py:24: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(check=models.Q(currency="EGP", exponent=2), name="promotion_supported_money"),
+
+core_apps/features/catalog_models.py:25
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/catalog_models.py:25: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/summary_sharing.py:34
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/summary_sharing.py:34: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/application_profiles.py:106
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/application_profiles.py:106: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reservations.py:97
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reservations.py:97: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reservations.py:101
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reservations.py:101: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:40
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:40: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:75
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:75: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:118
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:118: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:122
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:122: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:190
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:190: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:220
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:220: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_models.py:174
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_models.py:174: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_models.py:178
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_models.py:178: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_models.py:318
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_models.py:318: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_contract_models.py:43
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_contract_models.py:43: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_contract_models.py:47
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_contract_models.py:47: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:68
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:68: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:73
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:73: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:76
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:76: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:108
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:108: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:158
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:158: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/transition_network_models.py:32
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/transition_network_models.py:32: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/chargebacks.py:52
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/chargebacks.py:52: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/chargebacks.py:56
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/chargebacks.py:56: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_saved_models.py:33
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_saved_models.py:33: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/commerce_models.py:65
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/commerce_models.py:65: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/experience/models.py:66
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/experience/models.py:66: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraints = [models.CheckConstraint(
+
+core_apps/virtual_tours/models.py:68
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/virtual_tours/models.py:68: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+../../../../../../private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/openid/oidutil.py:105
+  /private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/openid/oidutil.py:105: DeprecationWarning: defusedxml.cElementTree is deprecated, import from defusedxml.ElementTree instead.
+    ElementTree = __import__(mod_name, None, None, ['unused'])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED core_apps/features/tests/test_sprint08_transport.py::test_frozen_commerce_transport_contracts[mvp]
+FAILED core_apps/features/tests/test_sprint08_transport.py::test_frozen_commerce_transport_contracts[restoration]
+2 failed, 302 passed, 64 warnings in 28.29s

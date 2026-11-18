@@ -1,0 +1,63 @@
+{
+  "original_failed_records": 497,
+  "reproduced_and_addressed_records": 7,
+  "remaining_records_not_closed": 490,
+  "cases": [
+    {
+      "id": "MOB-af9628612683",
+      "file": "company_role_work_status_test.dart",
+      "name": "role work uses resource status labels in ar",
+      "classification": "release-mode fixture",
+      "change": "MVP now asserts the localized refusal and zero capability/page requests; full mode still checks all seven resource-specific status labels in Arabic.",
+      "verification": "after-mvp and after-full; company payment covered in full mode"
+    },
+    {
+      "id": "MOB-f511ef6964ec",
+      "file": "rental_listing_categories_test.dart",
+      "name": "favorite card shows the saved group price instead of an unsaved bed minimum",
+      "classification": "obsolete presentation finder",
+      "change": "Uses the current FavoritePropertySummary and full rich-text price, verifying exact displayed amount/unit/basis and their spoken semantics; the unsaved 1,500 price remains forbidden.",
+      "verification": "after-mvp and after-full; company payment covered in full mode"
+    },
+    {
+      "id": "MOB-003e875764a9",
+      "file": "company_role_work_status_test.dart",
+      "name": "role work uses resource status labels in en",
+      "classification": "release-mode fixture",
+      "change": "The same denial and full-status assertions run independently in English. Error-toast cleanup finishes inside the widget test before Flutter verifies timers.",
+      "verification": "after-mvp and after-full; company payment covered in full mode"
+    },
+    {
+      "id": "MOB-b2b8119b58a8",
+      "file": "rental_listing_categories_test.dart",
+      "name": "favorite card keeps mixed prices separate and follows the filtered saved period",
+      "classification": "obsolete presentation finder",
+      "change": "Preserves mixed-price guidance, saved weekly filtering, exact rich-text price and accessibility; no unsaved minimum is accepted.",
+      "verification": "after-mvp and after-full; company payment covered in full mode"
+    },
+    {
+      "id": "MOB-04e975545b5b",
+      "file": "rental_listing_categories_test.dart",
+      "name": "favorites category switching exposes matching saved offers and exact navigation",
+      "classification": "obsolete presentation finder",
+      "change": "Taps the saved offer by its visible accommodation label rather than a removed ListTile; exact property and offer IDs and all subsequent category assertions remain.",
+      "verification": "after-mvp and after-full; company payment covered in full mode"
+    },
+    {
+      "id": "MOB-8487705d0c84",
+      "file": "rental_mock_provider_test.dart",
+      "name": "company session opens in place; double tap and timeout preserve one completion",
+      "classification": "release-mode fixture",
+      "change": "Company recovery runs in full-release mode and is explicitly skipped in MVP. An owner-workspace version runs in both modes with the original double-tap, single request, unknown completion, saved key, receipt recovery and draft cleanup assertions.",
+      "verification": "after-mvp and after-full; company payment covered in full mode"
+    },
+    {
+      "id": "MOB-7408ebd052db",
+      "file": "rental_listing_categories_test.dart",
+      "name": "favorites v1 filters before paging and retains the filter on later pages",
+      "classification": "test pagination race",
+      "change": "Bringing the fallback button into view can automatically fetch page two and remove it. Recheck its presence before tapping; exact request pages [1,2] and returned bed IDs remain required.",
+      "verification": "after-mvp and after-full; company payment covered in full mode"
+    }
+  ]
+}

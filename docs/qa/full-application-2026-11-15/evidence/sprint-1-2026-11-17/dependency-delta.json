@@ -1,0 +1,94 @@
+{
+  "python": "3.11",
+  "lock_sha256": "4bcf840609fabd022f4c6901a55ad33540ddb860d97fedc9f0569bd316d34730",
+  "changes": {
+    "asgiref": {
+      "before": "==3.12.1",
+      "after": "==3.13.0"
+    },
+    "black": {
+      "before": "==24.3.0",
+      "after": "==26.10.1"
+    },
+    "certifi": {
+      "before": "==2026.7.22",
+      "after": "==2026.10.23"
+    },
+    "click": {
+      "before": "==8.5.0",
+      "after": "==8.5.1"
+    },
+    "django": {
+      "before": "==4.2.11",
+      "after": "==5.2.17"
+    },
+    "djangorestframework": {
+      "before": "==3.15.0",
+      "after": "==3.18.2"
+    },
+    "djoser": {
+      "before": "==2.2.2",
+      "after": "==2.3.5"
+    },
+    "mypy-extensions": {
+      "before": "==1.1.0",
+      "after": "==1.2.0"
+    },
+    "oauthlib": {
+      "before": "==4.0.0",
+      "after": "==4.0.1"
+    },
+    "platformdirs": {
+      "before": "==4.12.3",
+      "after": "==4.14.5"
+    },
+    "pluggy": {
+      "before": "==1.6.0",
+      "after": "==1.7.0"
+    },
+    "pyasn1": {
+      "before": "==0.6.4",
+      "after": "==0.6.5"
+    },
+    "pycparser": {
+      "before": "==3.0",
+      "after": "==3.12"
+    },
+    "pypdf": {
+      "before": "==6.21.2",
+      "after": "==6.21.4"
+    },
+    "pytest": {
+      "before": "==8.3.5",
+      "after": "==9.0.3"
+    },
+    "pytest-asyncio": {
+      "before": "==0.23.7",
+      "after": "==1.3.0"
+    },
+    "python-dotenv": {
+      "before": "==1.0.1",
+      "after": "==1.2.2"
+    },
+    "pytokens": {
+      "before": null,
+      "after": "==0.4.1"
+    },
+    "setuptools": {
+      "before": "==81.0.0",
+      "after": "==84.1.0"
+    },
+    "social-auth-app-django": {
+      "before": "==5.4.3",
+      "after": "==7.1.0"
+    },
+    "social-auth-core": {
+      "before": "==4.9.1",
+      "after": "==6.2.0"
+    },
+    "sqlparse": {
+      "before": "==0.6.0",
+      "after": "==0.6.1"
+    }
+  }
+}

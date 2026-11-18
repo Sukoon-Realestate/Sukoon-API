@@ -1,48 +1,80 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TableScroll } from '@/components/ui/TableScroll';
 import { Header } from '@/components/layout/Header';
 import { Search, Download } from 'lucide-react';
 import { fetchAuditLogs } from '@/lib/api/system';
-import { AuditLogItem } from '@/lib/api/types';
+import { Pagination } from '@/components/ui/Pagination';
+import { auditLogPage, downloadAuditLogPage, type AuditLogPage } from '@/lib/api/auditLogs';
 
 export default function SystemAuditLogsPage() {
-  const [activeTab, setActiveTab] = useState<'all' | 'system' | 'users' | 'props' | 'kyc'>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [logs, setLogs] = useState<AuditLogItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  type AuditType = 'all' | 'system' | 'users' | 'props' | 'kyc';
+  const [query, setQuery] = useState({ type: 'all' as AuditType, search: '', page: 1 });
+  const [retry, setRetry] = useState(0);
+  const [result, setResult] = useState<{ key: string; page: AuditLogPage | null; failed: boolean }>({
+    key: '', page: null, failed: false,
+  });
+  const [exportMessage, setExportMessage] = useState('');
+  const [exportFailed, setExportFailed] = useState(false);
+  const version = useRef(0);
+  const requestKey = JSON.stringify([query.type, query.search, query.page, retry]);
+  const activeTab = query.type;
+  const searchQuery = query.search;
+  const isLoading = result.key !== requestKey;
+  const hasError = !isLoading && result.failed;
+  const currentPage = !isLoading && !hasError ? result.page : null;
+  const logs = currentPage?.results ?? [];
+
+  function filter(type: AuditType, search: string) {
+    if (type === query.type && search === query.search) return;
+    version.current += 1;
+    setExportMessage('');
+    setQuery({ type, search, page: 1 });
+  }
+
+  function changePage(page: number) {
+    if (!currentPage || !Number.isSafeInteger(page) || page < 1 ||
+        page > currentPage.total_pages || page === query.page) return;
+    version.current += 1;
+    setExportMessage('');
+    setQuery({ ...query, page });
+  }
+
+  function exportPage() {
+    if (!currentPage || logs.length === 0) return;
+    try {
+      downloadAuditLogPage(currentPage);
+      setExportFailed(false);
+      setExportMessage(`تم تجهيز ${logs.length} سجل من الصفحة ${query.page} للتنزيل.`);
+    } catch {
+      setExportFailed(true);
+      setExportMessage('تعذر تجهيز ملف CSV. أعد المحاولة.');
+    }
+  }
 
   useEffect(() => {
-    let isCancelled = false;
-    async function loadLogs() {
-      setIsLoading(true);
+    let cancelled = false;
+    const requestVersion = ++version.current;
+    const timer = setTimeout(async () => {
       try {
-        const res = await fetchAuditLogs({
-          type: activeTab,
-          search: searchQuery.trim() || undefined,
+        const response = await fetchAuditLogs({
+          type: query.type,
+          search: query.search.trim() || undefined,
+          page: query.page,
         });
-        if (!isCancelled) {
-          setLogs(res.results || []);
+        const page = auditLogPage(response, query.page);
+        if (!cancelled && requestVersion === version.current) {
+          setResult({ key: requestKey, page, failed: false });
         }
-      } catch (err) {
-        console.error('Failed to load audit logs:', err);
-      } finally {
-        if (!isCancelled) {
-          setIsLoading(false);
+      } catch {
+        if (!cancelled && requestVersion === version.current) {
+          setResult({ key: requestKey, page: null, failed: true });
         }
       }
-    }
-
-    const timer = setTimeout(() => {
-      loadLogs();
     }, 300);
-
-    return () => {
-      isCancelled = true;
-      clearTimeout(timer);
-    };
-  }, [activeTab, searchQuery]);
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, [query.type, query.search, query.page, requestKey]);
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -59,7 +91,7 @@ export default function SystemAuditLogsPage() {
               type="text"
               placeholder="بحث في السجل..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => filter(query.type, e.target.value)}
               className="w-full pl-4 pr-10 py-2 bg-[var(--card-bg)] rounded-full border border-[var(--card-border)] text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-[#0D7C66] transition-all placeholder:text-[var(--text-subtle)] text-[var(--foreground)]"
             />
             <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3.5 top-2.5" />
@@ -68,7 +100,7 @@ export default function SystemAuditLogsPage() {
           {/* Filter Pills */}
           <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto justify-start md:justify-end">
             <button
-              onClick={() => setActiveTab('all')}
+              onClick={() => filter('all', query.search)}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTab === 'all'
                   ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
@@ -78,7 +110,7 @@ export default function SystemAuditLogsPage() {
               كل الإجراءات
             </button>
             <button
-              onClick={() => setActiveTab('kyc')}
+              onClick={() => filter('kyc', query.search)}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTab === 'kyc'
                   ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
@@ -88,7 +120,7 @@ export default function SystemAuditLogsPage() {
               KYC
             </button>
             <button
-              onClick={() => setActiveTab('props')}
+              onClick={() => filter('props', query.search)}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTab === 'props'
                   ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
@@ -98,7 +130,7 @@ export default function SystemAuditLogsPage() {
               عقارات
             </button>
             <button
-              onClick={() => setActiveTab('users')}
+              onClick={() => filter('users', query.search)}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTab === 'users'
                   ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
@@ -108,7 +140,7 @@ export default function SystemAuditLogsPage() {
               مستخدمون
             </button>
             <button
-              onClick={() => setActiveTab('system')}
+              onClick={() => filter('system', query.search)}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTab === 'system'
                   ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
@@ -117,13 +149,17 @@ export default function SystemAuditLogsPage() {
             >
               نظام
             </button>
-            <button className="flex items-center gap-1.5 bg-[var(--card-bg)] px-4 py-1.5 rounded-full border border-[var(--card-border)] text-xs font-bold text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors shadow-[var(--shadow-card)] cursor-pointer">
+            <button onClick={exportPage} disabled={!currentPage || logs.length === 0} className="disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 bg-[var(--card-bg)] px-4 py-1.5 rounded-full border border-[var(--card-border)] text-xs font-bold text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors shadow-[var(--shadow-card)] cursor-pointer">
               <Download className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-              <span>تصدير CSV</span>
+              <span>تصدير الصفحة CSV</span>
             </button>
           </div>
         </div>
 
+        <p className="text-xs text-[var(--text-muted)]">
+          تصدير CSV يشمل سجلات الصفحة المعروضة فقط وفق البحث والتصفية الحاليين، وليس جميع صفحات السجل.
+        </p>
+        {exportMessage && <p role={exportFailed ? 'alert' : 'status'}>{exportMessage}</p>}
         {/* Audit Log Table Container */}
         <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden">
           <TableScroll>
@@ -144,6 +180,12 @@ export default function SystemAuditLogsPage() {
                       جاري تحميل السجل...
                     </td>
                   </tr>
+                ) : hasError ? (
+                  <tr><td colSpan={5} className="py-8 text-center">
+                    <div role="alert">تعذر تحميل سجل النشاط. لا يمكن تأكيد النتائج.</div>
+                    <button onClick={() => { setExportMessage(''); setRetry(value => value + 1); }}
+                      className="mt-3 rounded-lg border px-4 py-2">إعادة المحاولة</button>
+                  </td></tr>
                 ) : logs.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="py-8 text-center text-[var(--text-subtle)] font-medium">
@@ -211,6 +253,9 @@ export default function SystemAuditLogsPage() {
               </tbody>
             </table>
           </TableScroll>
+          {currentPage && <Pagination currentPage={currentPage.page}
+            totalPages={currentPage.total_pages} totalItems={currentPage.count}
+            itemsPerPage={currentPage.per_page} onPageChange={changePage} />}
         </div>
       </div>
     </div>

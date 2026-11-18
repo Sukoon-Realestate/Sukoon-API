@@ -81,16 +81,9 @@ def visible_messages(conversation, participant):
 
 
 def unread_count(conversation, participant):
-    return (
-        visible_messages(conversation, participant)
-        .filter(
-            sequence__gt=participant.last_read_sequence,
-            deleted_at__isnull=True,
-        )
-        .exclude(sender_id=participant.user_id)
-        .exclude(kind="system")
-        .count()
-    )
+    from .unread import for_participant
+
+    return for_participant(participant).count()
 
 
 def eligible_participants(conversation):
@@ -114,14 +107,13 @@ def eligible_participants(conversation):
 
 
 def total_unread_count(user):
-    from django.db.models import Sum
     from rest_framework.exceptions import APIException
+    from .unread import total_for_participants
 
-    total = (
+    total = total_for_participants(
         ConversationParticipant.objects.filter(
             user=user, conversation__kind="direct"
-        ).aggregate(total=Sum("unread_count"))["total"]
-        or 0
+        )
     )
     for conversation in Conversation.objects.filter(
         kind__in=["housing_group", "company_request"], participant_set__user=user

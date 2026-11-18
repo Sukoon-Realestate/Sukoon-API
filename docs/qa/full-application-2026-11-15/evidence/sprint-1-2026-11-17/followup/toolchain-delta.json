@@ -1,0 +1,124 @@
+{
+  "frontend/package-lock.json": {
+    "sha256": "00c027415855103f36a7d64a64a71dff7e97b2e50b254da067677ca5503b3909",
+    "changes": {
+      "node_modules/@isaacs/nonrecursive-glob-match": {
+        "before": null,
+        "after": "1.1.0"
+      },
+      "node_modules/@typescript-eslint/eslint-plugin": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/eslint-plugin/node_modules/ignore": {
+        "before": "7.0.14",
+        "after": "7.0.16"
+      },
+      "node_modules/@typescript-eslint/parser": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/project-service": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/scope-manager": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/tsconfig-utils": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/type-utils": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/types": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/typescript-estree": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch": {
+        "before": "10.2.6",
+        "after": "11.0.9"
+      },
+      "node_modules/@typescript-eslint/utils": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/visitor-keys": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/typescript-eslint": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      }
+    }
+  },
+  "frontend/landing/package-lock.json": {
+    "sha256": "1726deedcfd58503ea5beb3799bed46102f118a94d7c85fd34be75552be9d53e",
+    "changes": {
+      "node_modules/@isaacs/nonrecursive-glob-match": {
+        "before": null,
+        "after": "1.1.0"
+      },
+      "node_modules/@typescript-eslint/eslint-plugin": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/eslint-plugin/node_modules/ignore": {
+        "before": "7.0.14",
+        "after": "7.0.16"
+      },
+      "node_modules/@typescript-eslint/parser": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/project-service": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/scope-manager": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/tsconfig-utils": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/type-utils": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/types": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/typescript-estree": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch": {
+        "before": "10.2.6",
+        "after": "11.0.9"
+      },
+      "node_modules/@typescript-eslint/utils": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/@typescript-eslint/visitor-keys": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      },
+      "node_modules/typescript-eslint": {
+        "before": "8.72.2",
+        "after": "8.73.0"
+      }
+    }
+  }
+}

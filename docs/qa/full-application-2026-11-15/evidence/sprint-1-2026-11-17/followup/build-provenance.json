@@ -1,0 +1,13 @@
+{
+  "source_files": 3450,
+  "source_sha256": "869c9508243f2d80fbf90f046976a61ffa2223b499efe342465500b43e19e314",
+  "git_head": "302daf3602f9ab45c96fcf46a40e9f65e8817672",
+  "dirty_checkout": true,
+  "build_mode": "debug",
+  "flavor": "dev",
+  "device": "iPhone 18 Pro iOS 27.0 simulator",
+  "runner_sha256": "f1f737c313acbd6e0c9c478497eb41f92bcd3c52704897f24bf8bf58cdfab7f6",
+  "installed_runner_sha256": "05baa85b4e55f70679cd492592370884f93b2cae9f773b1acb6553de9c182d78",
+  "built_installed_runner_match": false,
+  "provenance_limit": "Source and built-executable hashes were recorded at capture start. Another local Flutter session replaced the app later, so the post-journey installed hash does not establish identity for the captured journey."
+}

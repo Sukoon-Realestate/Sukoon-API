@@ -37,14 +37,14 @@ test('tour rejection editor preserves both reasons and the exact operation after
     title: 'Synthetic tour', review_state: 'pending', processing_state: 'ready', variants: [], history: [] };
   const api = { decideTour: async (...args) => { calls.push(args); if (calls.length === 1) throw new Error('Synthetic lost response'); },
     reviewDetail: async () => ({ ...initial, review_state: 'rejected', can_review: false }) };
-  const module = load('src/components/tours/TourReviewPage.tsx', {
+  const loadedModule = load('src/components/tours/TourReviewPage.tsx', {
     react: { useState: value => { const i = index++; if (!(i in states)) states[i] = value;
       return [states[i], next => { states[i] = next; }]; }, useRef: value => {
       const i = refIndex++; return refs[i] ?? (refs[i] = { current: value }); } },
     '../../lib/api/tour-review': api, '../layout/Header': { Header: () => null },
     './TourPreviewButton': { TourPreviewButton: () => null }, '../../lib/api/client': { ApiError: class extends Error {} },
   });
-  const render = () => { index = refIndex = 0; return nodes(module.ReviewEditor({ initial, onSaved: async () => {} })); };
+  const render = () => { index = refIndex = 0; return nodes(loadedModule.ReviewEditor({ initial, onSaved: async () => {} })); };
   let tree = render();
   tree.find(n => n.type === 'textarea' && n.props.maxLength === 4000).props.onChange({ target: { value: 'Private evidence' } });
   tree.find(n => n.type === 'select').props.onChange({ target: { value: 'rejected' } });

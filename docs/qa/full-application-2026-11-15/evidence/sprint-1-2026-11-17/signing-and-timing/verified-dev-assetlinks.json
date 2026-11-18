@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.app.sokoon.real.estate.dev",
+      "sha256_cert_fingerprints": [
+        "F3:B9:D2:67:E8:09:10:85:49:AE:FC:B9:E9:4B:50:FA:85:95:1B:93:C3:B1:0D:01:68:34:0C:2A:30:5A:55:A8"
+      ]
+    }
+  }
+]

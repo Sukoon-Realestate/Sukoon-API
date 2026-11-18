@@ -1,0 +1,35 @@
+00:00 +0: loading /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_privacy_copy_test.dart
+00:00 +0: visit notices preserve phone privacy in en
+00:00 +0 -1: visit notices preserve phone privacy in en [E]
+  Expected: 'Phone numbers stay private after acceptance. Communicate through Sokoun chat.'
+    Actual: 'Once the owner accepts, you can both see each other\'s phone number'
+     Which: is different.
+            Expected: Phone numb ...
+              Actual: Once the o ...
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/visit_privacy_copy_test.dart 15:9              main.<fn>
+  
+00:00 +0 -1: visit notices preserve phone privacy in ar
+00:00 +0 -2: visit notices preserve phone privacy in ar [E]
+  Expected: 'تظل أرقام الهاتف خاصة بعد قبول الزيارة. تواصل عبر محادثة سكون.'
+    Actual: 'عند قبول المالك للزيارة، يظهر رقمك له ويظهر رقمه لك'
+     Which: is different.
+            Expected: تظل أرقام  ...
+              Actual: عند قبول ا ...
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/visit_privacy_copy_test.dart 15:9              main.<fn>
+  
+00:00 +0 -2: (tearDownAll)
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_privacy_copy_test.dart: visit notices preserve phone privacy in ar
+  /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_privacy_copy_test.dart: visit notices preserve phone privacy in en

@@ -671,9 +671,10 @@ def test_admin_media_inspection_checks_reviewer_role(company_setup, settings, tm
     from core_apps.users.models import User
 
     owner, _, _, _, building, *_ = company_setup
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     settings.VIRTUAL_TOUR_PRIVATE_ROOT = str(tmp_path)
     image = io.BytesIO()
     Image.new("RGB", (4, 4), "blue").save(image, "PNG")

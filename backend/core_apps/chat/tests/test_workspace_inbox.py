@@ -1,5 +1,5 @@
 import pytest
-from core_apps.chat.models import ConversationWorkspace
+from core_apps.chat.models import ConversationWorkspace, Message
 from core_apps.chat.services.message_service import get_or_create_direct_conversation
 from core_apps.chat.services.workspace_inbox import scoped, visible
 from rest_framework.exceptions import ValidationError
@@ -72,7 +72,11 @@ def test_summary_counts_distinct_conversations_and_context(user, another_user):
     user.save()
     for workspace in ["owner", "student"]:
         conversation = get_or_create_direct_conversation(user=user, other_user=another_user, workspace=workspace)
-        conversation.participant_set.filter(user=user).update(unread_count=3)
+        conversation.participant_set.filter(user=user).update(unread_count=43)
+        Message.objects.bulk_create([
+            Message(conversation=conversation, sender=another_user, sequence=i + 1, content="Unread")
+            for i in range(3)
+        ])
     result = authenticated(user).get("/api/v1/features/v1/workspace-summary/")
     assert result.status_code == 200, result.data
     from core_apps.common.mvp_scope import enabled

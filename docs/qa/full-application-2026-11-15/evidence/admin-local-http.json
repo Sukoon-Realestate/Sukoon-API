@@ -1,0 +1,597 @@
+[
+  {
+    "path": "/api/v1/admin/session/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.01,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 518,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/session/"
+  },
+  {
+    "path": "/api/v1/admin/dashboard/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.01,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 1218,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/dashboard/"
+  },
+  {
+    "path": "/api/v1/admin/dashboard/executive/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.009,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 5934,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/dashboard/executive/"
+  },
+  {
+    "path": "/api/v1/admin/followups/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.008,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 710,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/followups/"
+  },
+  {
+    "path": "/api/v1/admin/users/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.008,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 363,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/users/"
+  },
+  {
+    "path": "/api/v1/admin/users/?search=missing-qa-record",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.006,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 45,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/users/?search=missing-qa-record"
+  },
+  {
+    "path": "/api/v1/admin/users/?page=99999",
+    "method": "GET",
+    "status": 404,
+    "expected": [
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.006,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 39,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/users/?page=99999"
+  },
+  {
+    "path": "/api/v1/admin/kyc/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.006,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 45,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/kyc/"
+  },
+  {
+    "path": "/api/v1/admin/kyc/metrics/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.005,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 116,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/kyc/metrics/"
+  },
+  {
+    "path": "/api/v1/admin/properties/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.006,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 45,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/properties/"
+  },
+  {
+    "path": "/api/v1/admin/properties/metrics/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.006,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 636,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/properties/metrics/"
+  },
+  {
+    "path": "/api/v1/admin/properties/?search=missing-qa-record",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.006,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 45,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/properties/?search=missing-qa-record"
+  },
+  {
+    "path": "/api/v1/admin/properties/?status=pending",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.006,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 45,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/properties/?status=pending"
+  },
+  {
+    "path": "/api/v1/admin/moderation/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.008,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 45,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/moderation/"
+  },
+  {
+    "path": "/api/v1/admin/moderation/metrics/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.009,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 130,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/moderation/metrics/"
+  },
+  {
+    "path": "/api/v1/admin/reports/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.013,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 45,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/reports/"
+  },
+  {
+    "path": "/api/v1/admin/reports/metrics/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.007,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 104,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/reports/metrics/"
+  },
+  {
+    "path": "/api/v1/admin/reports/overview/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.009,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 639,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/reports/overview/"
+  },
+  {
+    "path": "/api/v1/admin/support/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.009,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 45,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/support/"
+  },
+  {
+    "path": "/api/v1/admin/support/metrics/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.006,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 143,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/support/metrics/"
+  },
+  {
+    "path": "/api/v1/admin/support/team/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.005,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 110,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/support/team/"
+  },
+  {
+    "path": "/api/v1/admin/analytics/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.017,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 4681,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/analytics/"
+  },
+  {
+    "path": "/api/v1/admin/analytics/?period=invalid",
+    "method": "GET",
+    "status": 400,
+    "expected": [
+      400
+    ],
+    "outcome": "PASS",
+    "seconds": 0.017,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 73,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/analytics/?period=invalid"
+  },
+  {
+    "path": "/api/v1/admin/settings/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.013,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 45,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/settings/"
+  },
+  {
+    "path": "/api/v1/admin/system/health/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200,
+      503
+    ],
+    "outcome": "PASS",
+    "seconds": 0.016,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 1106,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/system/health/"
+  },
+  {
+    "path": "/api/v1/admin/system/logs/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.009,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 45,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/system/logs/"
+  },
+  {
+    "path": "/api/v1/admin/system/notifications/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.007,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 45,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/system/notifications/"
+  },
+  {
+    "path": "/api/v1/admin/staff/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.007,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 350,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/staff/"
+  },
+  {
+    "path": "/api/v1/admin/staff/roles/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.005,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 3125,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/staff/roles/"
+  },
+  {
+    "path": "/api/v1/admin/permissions/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.005,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 1015,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/permissions/"
+  },
+  {
+    "path": "/api/v1/admin/content/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.006,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 9881,
+    "traceback_exposed": false,
+    "final_url": "http://127.0.0.1:8037/api/v1/admin/content/"
+  }
+]

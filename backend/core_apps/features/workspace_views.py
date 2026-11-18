@@ -9,7 +9,8 @@ from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 from core_apps.chat.services.workspace_inbox import visible
 from core_apps.chat.services.group_access import authorize, unread_count
-from core_apps.chat.models import ConversationWorkspace
+from core_apps.chat.models import ConversationParticipant, ConversationWorkspace
+from core_apps.chat.services.unread import with_unread_count
 from core_apps.profiles.services import ProfileService
 
 
@@ -58,12 +59,18 @@ class SummaryView(FeatureAPIView):
             user=user
         ).values_list("conversation_id", "workspace"):
             contexts.setdefault(cid, set()).add(workspace)
-        for conversation in visible(user).select_related("company_request"):
+        conversations = list(visible(user).select_related("company_request"))
+        direct_counts = dict(
+            with_unread_count(ConversationParticipant.objects.filter(
+                user=user,
+                conversation_id__in=[c.pk for c in conversations if c.kind == "direct"],
+            )).values_list("conversation_id", "effective_unread_count")
+        )
+        for conversation in conversations:
             if mvp and conversation.kind != "direct":
                 continue
             if conversation.kind == "direct":
-                participant = conversation.participant_set.get(user=user)
-                count = participant.unread_count
+                count = direct_counts.get(conversation.pk, 0)
                 spaces = contexts.get(conversation.pk, {"general"})
             else:
                 try:

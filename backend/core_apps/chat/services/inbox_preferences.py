@@ -1,10 +1,11 @@
 """Private inbox organization, independent of delivery/read receipts."""
 
 from datetime import timedelta
-from django.db.models import Exists, F, OuterRef, Subquery, Q
+from django.db.models import F, OuterRef, Subquery, Q
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
-from core_apps.chat.models import ConversationParticipant, Message
+from core_apps.chat.models import ConversationParticipant
+from .unread import with_unread_count
 
 MUTE_DURATIONS = {"off": 0, "hour": 3600, "day": 86400, "week": 604800, "forever": None}
 
@@ -64,26 +65,15 @@ def organize_inbox(queryset, user, *, unread_only=False):
     )
     queryset = queryset.annotate(
         inbox_pinned_at=Subquery(viewer.values("pinned_at")[:1]),
-        inbox_read_sequence=Subquery(viewer.values("last_read_sequence")[:1]),
-        inbox_visible_from=Subquery(viewer.values("visible_from_sequence")[:1]),
         inbox_reminder=Subquery(viewer.values("unread_reminder_sequence")[:1]),
-        inbox_legacy_unread=Subquery(viewer.values("unread_count")[:1]),
     )
     if unread_only:
-        incoming = (
-            Message.objects.filter(
-                conversation_id=OuterRef("pk"),
-                sequence__gt=OuterRef("inbox_read_sequence"),
-                sequence__gte=OuterRef("inbox_visible_from"),
-                deleted_at__isnull=True,
+        queryset = queryset.annotate(
+            inbox_unread_count=Subquery(
+                with_unread_count(viewer).values("effective_unread_count")[:1]
             )
-            .exclude(sender=user)
-            .exclude(kind="system")
-        )
-        queryset = queryset.annotate(inbox_has_unread=Exists(incoming)).filter(
-            Q(inbox_has_unread=True)
-            | Q(inbox_reminder__isnull=False)
-            | Q(kind="direct", inbox_legacy_unread__gt=0)
+        ).filter(
+            Q(inbox_unread_count__gt=0) | Q(inbox_reminder__isnull=False)
         )
     return queryset.order_by(
         F("inbox_pinned_at").desc(nulls_last=True),

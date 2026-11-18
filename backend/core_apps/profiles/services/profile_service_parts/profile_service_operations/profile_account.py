@@ -35,7 +35,7 @@ class ProfileAccountMixin:
         if profile:
             if profile.phone_number:
                 score += 15
-            if profile.avatar:
+            if profile.avatar_url:
                 score += 20
             if user.is_verified or profile.national_id or profile.id_face:
                 score += 10
@@ -58,7 +58,7 @@ class ProfileAccountMixin:
 
         profile, _ = Profile.objects.get_or_create(user=user)
 
-        avatar_url = profile.avatar.url if profile.avatar else None
+        avatar_url = profile.avatar_url
         member_year, member_month, member_since_label = membership_labels(user.date_joined)
 
         # * Calculate statistics

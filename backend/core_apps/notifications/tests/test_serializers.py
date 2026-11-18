@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, timezone as datetime_timezone
 import pytest
 from django.utils import timezone
 
@@ -29,7 +29,7 @@ class TestNotificationSerializers:
         assert format_arabic_time_ago(None) == ""
 
     def test_arabic_time_formatting(self):
-        dt = timezone.datetime(2026, 1, 14, 14, 55, tzinfo=timezone.utc)
+        dt = timezone.datetime(2026, 1, 14, 14, 55, tzinfo=datetime_timezone.utc)
         formatted = format_arabic_time(dt)
         assert "2:55" in formatted
         assert "م" in formatted

@@ -84,7 +84,10 @@ def test_legacy_private_rejection_and_other_source_hash_never_become_public(prop
 def test_existing_django_review_console_keeps_public_and_private_reasons_separate(
     property_obj, superuser, client, settings,
 ):
-    settings.STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     _, revision, _ = ready_variant(property_obj)
     revision.review_state = 'pending'
     revision.save(update_fields=['review_state'])

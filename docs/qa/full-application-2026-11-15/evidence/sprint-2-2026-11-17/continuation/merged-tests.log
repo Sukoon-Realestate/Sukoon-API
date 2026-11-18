@@ -1,0 +1,54 @@
+(node:42036) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/src/lib/admin-dashboard.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ every grouped navigation destination has an existing page (0.423083ms)
+✔ all existing main sections appear exactly once (0.3155ms)
+✔ detail and review pages select the most specific destination (0.077709ms)
+✔ unknown and login routes do not masquerade as overview (0.045959ms)
+✔ cross-cutting reports live with safety and support (0.061041ms)
+✔ Arabic search matches normalized spelling and descriptions (1.224417ms)
+✔ incomplete workload inputs never look like a complete total (0.07875ms)
+(node:42037) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/src/lib/basePath.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ dashboard destination: / (1.036958ms)
+✔ dashboard destination: /login (0.135416ms)
+✔ dashboard destination: /users (0.071542ms)
+✔ dashboard destination: /users/user-123 (0.065417ms)
+✔ dashboard destination: /properties/review?id=prop-123#photos (0.088625ms)
+✔ dashboard destination: /reports/overview (0.058334ms)
+✔ dashboard destination: /reports/chat-policy (0.070875ms)
+✔ dashboard destination: /admin (0.054792ms)
+✔ dashboard destination: /admin/users (0.63825ms)
+✔ dashboard destination: /admin?tab=overview (0.077959ms)
+✔ dashboard destination: /admin#activity (0.057791ms)
+✔ dashboard destination: /administrator (0.055875ms)
+✔ dashboard destination: #forgot (0.02175ms)
+✔ dashboard destination: https://example.com/help (0.025833ms)
+✔ dashboard destination: //example.com/help (0.01675ms)
+✔ dashboard destination: mailto:support@example.com (0.024583ms)
+✔ dashboard route matching: /admin (0.054167ms)
+✔ dashboard route matching: /admin/ (0.030208ms)
+✔ dashboard route matching: /admin/login (0.023042ms)
+✔ dashboard route matching: /admin/users/user-123 (0.022708ms)
+✔ dashboard route matching: /administrator (0.016833ms)
+✔ dashboard route matching: /ar (0.014833ms)
+✔ public ar page and layout agree on language, direction, navigation and form (31.032041ms)
+✔ public ar metadata advertises only valid canonical and translated routes (0.379625ms)
+✔ public en page and layout agree on language, direction, navigation and form (16.918792ms)
+✔ public en metadata advertises only valid canonical and translated routes (0.066708ms)
+✔ only supported public locales are generated; unsupported input does not render a page (0.340334ms)
+✔ locale proxy preserves query parameters and never redirects API methods or admin paths (2.445959ms)
+✔ test checkout form carries billing constraints and language without client-controlled price or provider credentials (0.779417ms)
+✔ unconfigured checkout origin uses the canonical API with one path separator (0.247792ms)
+✔ footer uses localized published policies and support when external HTTPS overrides are unavailable (5.142708ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 500.461459

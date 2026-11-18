@@ -20,7 +20,7 @@ class ProfileStatusMixin:
 
         profile, _ = Profile.objects.get_or_create(user=user)
 
-        avatar_url = profile.avatar.url if profile.avatar else None
+        avatar_url = profile.avatar_url
         full_name = user.get_full_name or user.first_name or user.email
         initial = (
             user.first_name[0]

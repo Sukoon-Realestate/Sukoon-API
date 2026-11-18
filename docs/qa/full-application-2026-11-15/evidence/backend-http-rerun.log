@@ -1,0 +1,18 @@
+.................................ssss......sssss.s                       [100%]
+=============================== warnings summary ===============================
+../../Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:241
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:241: RemovedInDjango50Warning: The default value of USE_TZ will change from False to True in Django 5.0. Set USE_TZ to False in your project settings if you want to keep the current default behavior.
+    warnings.warn(
+
+../../Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:289
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:289: RemovedInDjango51Warning: The STATICFILES_STORAGE setting is deprecated. Use STORAGES instead.
+    warnings.warn(STATICFILES_STORAGE_DEPRECATED_MSG, RemovedInDjango51Warning)
+
+core_apps/properties/tests/test_post_visit_decision.py: 34 warnings
+core_apps/features/tests/test_full_cycle_http.py: 1 warning
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/staticfiles/
+    mw_instance = middleware(adapted_handler)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /Users/demo23home/code/sukoon/Sukoon-API-sprint01/docs/qa/full-application-2026-11-15/evidence/backend-http-rerun.xml -
+40 passed, 10 skipped, 37 warnings in 61.47s (0:01:01)

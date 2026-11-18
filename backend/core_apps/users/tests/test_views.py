@@ -90,11 +90,12 @@ class TestSafePasswordChangedConfirmationEmail:
         req = RequestFactory().get("/")
         email_msg = SafePasswordChangedConfirmationEmail(req, {"user": user})
         with patch.object(SafePasswordChangedConfirmationEmail, "render"), patch(
-            "templated_mail.mail.BaseEmailMessage.send",
+            "django.core.mail.EmailMultiAlternatives.send",
             side_effect=OSError("SMTP connection timeout"),
-        ):
-            # Must not raise an exception
+        ) as smtp_send:
+            # Exercise the real superclass path and suppress its delivery error.
             email_msg.send([user.email])
+        smtp_send.assert_called_once_with(fail_silently=False)
 
 
 @pytest.mark.django_db

@@ -1,0 +1,11 @@
+✔ production cannot inherit demo switches or a direct browser API origin (0.705084ms)
+✔ an explicit production server origin remains authoritative (0.909083ms)
+✔ preview and local builds retain their isolated configuration (0.957167ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52.071625

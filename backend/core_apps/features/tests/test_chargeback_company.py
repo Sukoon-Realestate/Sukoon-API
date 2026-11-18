@@ -112,9 +112,10 @@ def test_company_closed_chargeback_restoration_closes_without_inventory_or_secon
     from django.urls import reverse
     from core_apps.admin_api.models import StaffProfile
 
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     payer = actors["payer"]
     payer.is_staff = True
     payer.save()

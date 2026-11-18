@@ -31,9 +31,10 @@ from core_apps.features.tests.test_reputation import (
 
 @pytest.fixture
 def web(actors, settings):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     browser = Client()
     browser.force_login(actors[4])
     return browser

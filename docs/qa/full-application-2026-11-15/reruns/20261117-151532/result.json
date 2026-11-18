@@ -1,0 +1,12 @@
+{
+  "exit_code": 0,
+  "timed_out": false,
+  "test_cases": {
+    "success": 2
+  },
+  "terminal_success": true,
+  "active_at_end": [],
+  "failed_cases": [],
+  "completed_successfully": true,
+  "mode": "mvp"
+}

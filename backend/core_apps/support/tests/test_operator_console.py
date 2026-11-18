@@ -12,9 +12,10 @@ pytestmark = pytest.mark.django_db
 def test_support_console_submits_one_reply_and_rejects_stale_or_revoked_write(
     user, settings
 ):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     agent = operator("support")
     ticket = create_ticket(
         user, "tenant", "other", "Help needed", "Please review the case."

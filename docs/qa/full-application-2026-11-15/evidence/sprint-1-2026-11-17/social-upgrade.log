@@ -1,0 +1,3 @@
+migration target 0016_alter_usersocialauth_extra_data rows 3
+PASS: three existing associations retained primary/user/provider IDs, UID and JSON; id_key backfills and empty-UID constraint verified
+migration target 0020_backfill_id_keys rows 3

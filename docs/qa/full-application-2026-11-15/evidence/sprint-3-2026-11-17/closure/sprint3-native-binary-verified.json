@@ -1,0 +1,8 @@
+{
+  "bundle_id": "com.app.sokoon.sprint3qa",
+  "kernel_sha256": "710f70929c3512d0cec7d675a7ec7d30b0f2870d2e863b0b9a191692949e6517",
+  "synchronous_registration": true,
+  "bundled_native_translations": true,
+  "bounded_frames": true,
+  "execution_ledger_required": true
+}

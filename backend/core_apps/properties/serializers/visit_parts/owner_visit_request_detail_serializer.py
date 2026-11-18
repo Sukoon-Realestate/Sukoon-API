@@ -47,7 +47,7 @@ class OwnerVisitRequestDetailSerializer(
         tenant = obj.tenant
         profile = getattr(tenant, "profile", None)
         avatar_url = (
-            profile.avatar.url if profile and getattr(profile, "avatar", None) else None
+            profile.avatar_url if profile else None
         )
         member_year = tenant.date_joined.year if tenant.date_joined else 2024
         lang = self._lang()

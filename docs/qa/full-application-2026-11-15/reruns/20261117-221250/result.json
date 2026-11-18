@@ -1,0 +1,1740 @@
+{
+  "exit_code": 0,
+  "timed_out": false,
+  "test_cases": {
+    "success": 345
+  },
+  "terminal_success": true,
+  "active_at_end": [],
+  "failed_cases": [],
+  "case_results": [
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationType implements all notification types from the contract",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationType unknown values do not throw",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationPayload normalizes an API payload with nested data",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationPayload normalizes an FCM envelope and string-encoded data",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationPayload parses numeric string fields",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves visit_request",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves visit_accepted",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves visit_rejected",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves visit_review",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves new_message",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves property_verified",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves property_views",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves daily_bump",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves new_property",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves property_update",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves account_verification",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves security_alert",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves promotion",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes resolves general",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes each type owns its concrete navigation strategy",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes supports direct navigation through the enum strategy",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes does not resolve routes missing a required id",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes rejects unsafe promotion URLs",
+      "result": "success"
+    },
+    {
+      "file": "notification_routes_test.dart",
+      "name": "NotificationRoutes dispatches through the registered app handler",
+      "result": "success"
+    },
+    {
+      "file": "endpoint_audit_interceptor_test.dart",
+      "name": "disabled auditing emits no request information",
+      "result": "success"
+    },
+    {
+      "file": "endpoint_audit_interceptor_test.dart",
+      "name": "completion exposes status and timing without private response data",
+      "result": "success"
+    },
+    {
+      "file": "endpoint_audit_interceptor_test.dart",
+      "name": "failure omits exception details and reports a changed session scope",
+      "result": "success"
+    },
+    {
+      "file": "endpoint_audit_interceptor_test.dart",
+      "name": "redacts data and distinguishes equivalent and different queries",
+      "result": "success"
+    },
+    {
+      "file": "endpoint_audit_interceptor_test.dart",
+      "name": "server next-link queries use the final URI and retain repeated values",
+      "result": "success"
+    },
+    {
+      "file": "endpoint_audit_interceptor_test.dart",
+      "name": "run and account boundaries stay distinct and word identifiers are hidden",
+      "result": "success"
+    },
+    {
+      "file": "headless_cookie_scope_test.dart",
+      "name": "an old headless engine cannot clear the current login cookies on expiry",
+      "result": "success"
+    },
+    {
+      "file": "headless_cookie_scope_test.dart",
+      "name": "a stale headless request cannot load or save another login cookies",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "backend cookies refresh expired access, cookie expired: false",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "backend cookies refresh expired access, cookie expired: true",
+      "result": "success"
+    },
+    {
+      "file": "media_mount_lifecycle_test.dart",
+      "name": "mounting a media reader is build-safe: progress=false",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "a persisted refresh-only session restores and refreshes",
+      "result": "success"
+    },
+    {
+      "file": "media_mount_lifecycle_test.dart",
+      "name": "mounting a media reader is build-safe: progress=true",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "socket startup refreshes a persisted session with no access cookie",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "socket startup with no usable refresh ends authentication once",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "unrelated and expired cookies do not restore authentication",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "rejected credentials at auth/login/ do not refresh an existing session",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "rejected credentials at auth/google/ do not refresh an existing session",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "refresh failure 403 preserves the session for recovery",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "refresh failure 429 preserves the session for recovery",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "refresh failure 500 preserves the session for recovery",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "an offline refresh keeps the session and can recover",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "a rejected refresh expires once without retrying the original request",
+      "result": "success"
+    },
+    {
+      "file": "dio_session_refresh_test.dart",
+      "name": "socket refresh with no refresh token expires the signed-in session",
+      "result": "success"
+    },
+    {
+      "file": "network_logging_policy_test.dart",
+      "name": "company credentials and recovered private records are not logged",
+      "result": "success"
+    },
+    {
+      "file": "network_logging_policy_test.dart",
+      "name": "private company exchanges preserve the transport and response",
+      "result": "success"
+    },
+    {
+      "file": "network_logging_policy_test.dart",
+      "name": "unknown credential headers are withheld without mutating transport",
+      "result": "success"
+    },
+    {
+      "file": "network_logging_policy_test.dart",
+      "name": "request logging preserves headers, parameters, body and response",
+      "result": "success"
+    },
+    {
+      "file": "network_logging_policy_test.dart",
+      "name": "HTTP error logging preserves the original failure and response",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "unused live reads are cancelled: session=false",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "unused live reads are cancelled: session=true",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "a disposed read owner never interrupts a submitted write",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "cancelled scopes prevent delayed reads and detach completed reads",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "media progress is opt-in: false",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "media progress is opt-in: true",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "an explicit download clears progress after a failed read",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "media download reuses authentication, refresh and language without JSON mapping",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "media refuses foreign origins, redirects and unbounded bodies",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "bounded header error codes survive the shared failure conversion",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "a lost connection after a POST remains unknown and is not replayed",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "HTTP and socket share refresh, socket first: false",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "HTTP and socket share refresh, socket first: true",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "late 401 reuses an already refreshed token",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "cancelling an HTTP waiter leaves shared refresh and other callers alive",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "shared refresh 401 has consistent expiry and can recover",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "shared refresh 500 has consistent expiry and can recover",
+      "result": "success"
+    },
+    {
+      "file": "read_request_lifecycle_test.dart",
+      "name": "workspace replacement cancels transport and only applies the new result",
+      "result": "success"
+    },
+    {
+      "file": "read_request_lifecycle_test.dart",
+      "name": "closing a Cubit cancels owned GETs: isRead=false",
+      "result": "success"
+    },
+    {
+      "file": "read_request_lifecycle_test.dart",
+      "name": "closing a Cubit cancels owned GETs: isRead=true",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "multipart uploads replay once after refresh with their file intact",
+      "result": "success"
+    },
+    {
+      "file": "read_request_lifecycle_test.dart",
+      "name": "reset cancels a pending read and a later load gets a fresh token",
+      "result": "success"
+    },
+    {
+      "file": "read_request_lifecycle_test.dart",
+      "name": "a thrown cancellation failure restores state without an error callback",
+      "result": "success"
+    },
+    {
+      "file": "read_request_lifecycle_test.dart",
+      "name": "independent reads merge results completed together",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "a rejected retry expires once without a refresh loop",
+      "result": "success"
+    },
+    {
+      "file": "read_request_lifecycle_test.dart",
+      "name": "a mapper failure uses the shared error state and callback",
+      "result": "success"
+    },
+    {
+      "file": "read_request_lifecycle_test.dart",
+      "name": "reset cancels every independent read and ignores late results",
+      "result": "success"
+    },
+    {
+      "file": "read_request_lifecycle_test.dart",
+      "name": "manual errors preserve the supplied server message",
+      "result": "success"
+    },
+    {
+      "file": "read_request_lifecycle_test.dart",
+      "name": "local access denial needs no UI and never starts the operation",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "GET reports byte progress before the response completes",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "cancellation stops a live GET without expiring the account",
+      "result": "success"
+    },
+    {
+      "file": "network_request_controls_test.dart",
+      "name": "cancelled requests never reach the adapter; send timeouts can be overridden",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "object list null contract 200 _Map<String, dynamic>",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "object list null contract 201 _Map<String, dynamic>",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "object list null contract 200 List<dynamic>",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "object list null contract 201 List<dynamic>",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "object list null contract 200 List<dynamic>",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "object list null contract 201 List<dynamic>",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "object list null contract 200 Null",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "object list null contract 201 Null",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "pagination headers become the internal typed-page input without inventing totals",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "optional success copy and additive fields preserve data: {data: {}}",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "optional success copy and additive fields preserve data: {message: , data: {}}",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "optional success copy and additive fields preserve data: {message: ok, data: {}, key: success}",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "malformed success cannot become local success: {message: ok}",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "malformed success cannot become local success: {message: ok, data: true}",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "malformed success cannot become local success: {message: ok, data: text}",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "malformed success cannot become local success: {message: ok, data: 0}",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "malformed success cannot become local success: []",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "malformed success cannot become local success: <html>proxy</html>",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "a malformed read uses read feedback without a submission warning",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "mapper cancellation remains silent: RequestCancelledException",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "mapper cancellation remains silent: RequestCancelledFailure",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "partial pagination headers fail rather than return an empty collection",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "HTTP 400 has no successful payload and uses bounded metadata",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "HTTP 401 has no successful payload and uses bounded metadata",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "HTTP 403 has no successful payload and uses bounded metadata",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "HTTP 404 has no successful payload and uses bounded metadata",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "HTTP 409 has no successful payload and uses bounded metadata",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "HTTP 413 has no successful payload and uses bounded metadata",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "HTTP 415 has no successful payload and uses bounded metadata",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "HTTP 422 has no successful payload and uses bounded metadata",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "HTTP 429 has no successful payload and uses bounded metadata",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "HTTP 500 has no successful payload and uses bounded metadata",
+      "result": "success"
+    },
+    {
+      "file": "api_response_contract_test.dart",
+      "name": "HTTP 503 has no successful payload and uses bounded metadata",
+      "result": "success"
+    },
+    {
+      "file": "user_journey_session_test.dart",
+      "name": "delayed profile persistence cannot overwrite the next account",
+      "result": "success"
+    },
+    {
+      "file": "user_journey_session_test.dart",
+      "name": "journey survives cache, copy and equality without guest access",
+      "result": "success"
+    },
+    {
+      "file": "headers_interceptor_test.dart",
+      "name": "shared headers reach reads and JSON writes",
+      "result": "success"
+    },
+    {
+      "file": "headers_interceptor_test.dart",
+      "name": "explicit headers override defaults regardless of casing",
+      "result": "success"
+    },
+    {
+      "file": "headers_interceptor_test.dart",
+      "name": "uploads retain multipart boundaries and repeated attachment fields",
+      "result": "success"
+    },
+    {
+      "file": "inactivity_notification_service_test.dart",
+      "name": "denied permission clears the old reminder without scheduling or requesting permission",
+      "result": "success"
+    },
+    {
+      "file": "inactivity_notification_service_test.dart",
+      "name": "permission granted schedules and a revoked-permission race never escapes",
+      "result": "success"
+    },
+    {
+      "file": "headers_interceptor_test.dart",
+      "name": "the same service sends the current language after a locale change",
+      "result": "success"
+    },
+    {
+      "file": "base_model_envelope_test.dart",
+      "name": "typed mapping preserves transport metadata and cache origin",
+      "result": "success"
+    },
+    {
+      "file": "base_model_envelope_test.dart",
+      "name": "preserves the backend message without changing its text or data",
+      "result": "success"
+    },
+    {
+      "file": "base_model_envelope_test.dart",
+      "name": "preserves the backend msg without changing its text or data",
+      "result": "success"
+    },
+    {
+      "file": "base_model_envelope_test.dart",
+      "name": "keeps message priority when both envelope fields are provided",
+      "result": "success"
+    },
+    {
+      "file": "base_model_envelope_test.dart",
+      "name": "does not invent text when both message fields are absent",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "semantic catalog matches packaged self-contained artwork",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "action_confirmed parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "billing_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "chat_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "company_portfolio_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "connection_unavailable parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "document_attention parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "doorway_retry parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "favorites_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "home_discovery_loading parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "housing_arrangement_confirmed parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "housing_collection_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "housing_options_loading parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "housing_records_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "protected_read_cache_lifecycle_test.dart",
+      "name": "startup registers logout cleanup before the first cache read",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "housing_shortlist_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "location_retry parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "neighborhood_loading parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "neighborhood_offline parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "next_step_ready parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "notifications_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "cached_image_mobile_test.dart",
+      "name": "listing photos decode to constrained mobile width and accept infinite layout width",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "preparing_space_loading parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "property_load_failed parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "cached_image_mobile_test.dart",
+      "name": "explicit large photo dimensions keep the existing decode ceiling",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "property_media_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "property_search_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "property_view_retry parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "record_search_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "reviews_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "service_unavailable parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "student_housing_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "visits_empty parses, paints, moves and has a clean loop seam",
+      "result": "success"
+    },
+    {
+      "file": "sokoun_lottie_test.dart",
+      "name": "exports the actual Flutter renderer gallery and animated filmstrips",
+      "result": "success"
+    },
+    {
+      "file": "core_media_picker_test.dart",
+      "name": "one remaining slot opens a valid single gallery picker",
+      "result": "success"
+    },
+    {
+      "file": "core_media_picker_test.dart",
+      "name": "cancelling the single gallery picker returns no files",
+      "result": "success"
+    },
+    {
+      "file": "core_media_picker_test.dart",
+      "name": "multiple selection preserves the requested limit null",
+      "result": "success"
+    },
+    {
+      "file": "core_media_picker_test.dart",
+      "name": "multiple selection preserves the requested limit 3",
+      "result": "success"
+    },
+    {
+      "file": "app_flavor_test.dart",
+      "name": "build flavor precedes package inference for com.sokoun.isolated.exportqa",
+      "result": "success"
+    },
+    {
+      "file": "app_flavor_test.dart",
+      "name": "build flavor precedes package inference for com.app.sokoon.real.estate.dev",
+      "result": "success"
+    },
+    {
+      "file": "app_flavor_test.dart",
+      "name": "build flavor precedes package inference for com.app.sokoon.real.estate",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "passive skeleton never mounts success content or repeats a read",
+      "result": "success"
+    },
+    {
+      "file": "session_read_cache_test.dart",
+      "name": "each GET identity survives errors independently",
+      "result": "success"
+    },
+    {
+      "file": "session_read_cache_test.dart",
+      "name": "empty success replaces old rows and remains available on failure",
+      "result": "success"
+    },
+    {
+      "file": "session_read_cache_test.dart",
+      "name": "private cache cannot cross environment or account sessions",
+      "result": "success"
+    },
+    {
+      "file": "session_read_cache_test.dart",
+      "name": "late private responses cannot populate the replacement session",
+      "result": "success"
+    },
+    {
+      "file": "session_read_cache_test.dart",
+      "name": "writes are never cached and expired entries are misses",
+      "result": "success"
+    },
+    {
+      "file": "session_read_cache_test.dart",
+      "name": "a late role response cannot populate either the next role or a return to its old role",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "loading more preserves the mounted scroll view and its offset",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "withData retains loaded content after check_internet (shimmer: false)",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "mapped workflow state restores raw cache and preserves the current intent",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "a write result cannot cross an account boundary at the use case",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "failure belongs to state and is cleared by the next operation",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "request completion awaits a success callback without changing API success",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "a failing success callback does not become an API failure",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "request completion awaits error feedback and preserves failure metadata",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "withData allows pull refresh on first-load check_internet (shimmer: false)",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "public cache is visible while initialization remains pending",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "cache miss stays loading and duplicate consumers share one refresh",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "a superseded response cannot write to the cache",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "a cancelled pending read does not swallow a replacement request",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "cancellation restores usable content without an error or success event",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "read failures do not become cache success and retry clears the error",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "withData retains loaded content after Server unavailable (shimmer: false)",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "cache writes failing cannot discard successful remote data",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "cache fallback disabled preserves the server failure verbatim",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "offline refresh retains content and invalidates freshness",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "a changed resource cannot reuse the previous resource",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "a late response cannot overwrite a newer resource read",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "query identity ignores map order and changes with filter values",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "cache mismatches and malformed projections are misses",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "private reads restore from the configured session cache",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "writes and incomplete contracts never preload",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "late responses never become fresh in a replacement account",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "retained composite data cannot survive HTTP 401",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "retained composite data cannot survive HTTP 403",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "retained composite data cannot survive HTTP 404",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "retained composite data cannot survive HTTP 410",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "retained composite data cannot survive HTTP 423",
+      "result": "success"
+    },
+    {
+      "file": "cached_read_test.dart",
+      "name": "transient composite failures retain data and fresh-only gates reject it",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "withData allows pull refresh on first-load Server unavailable (shimmer: false)",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "offline errors allow pull refresh without a retry button (shimmer: false)",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "withData retains loaded content after check_internet (shimmer: true)",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "withData allows pull refresh on first-load check_internet (shimmer: true)",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "withData retains loaded content after Server unavailable (shimmer: true)",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "withData allows pull refresh on first-load Server unavailable (shimmer: true)",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "offline errors allow pull refresh without a retry button (shimmer: true)",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "other errors show their message and allow pull refresh: Server unavailable",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "other errors show their message and allow pull refresh: ",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "other errors show their message and allow pull refresh:    ",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "other errors show their message and allow pull refresh: null",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "refresh stays pending and can finish after disposal",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "withData keeps the same scroll view through a failed refresh",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "withData retains cached content and cache metadata on offline error",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "an empty success remains visible while refreshing and after failure (ErrorType.withData)",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "an empty success remains visible while refreshing and after failure (ErrorType.customView)",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "an empty success remains visible while refreshing and after failure (ErrorType.defaultView)",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "a custom empty state remains refreshable without a retry button",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "HTTP 401 revokes retained data even if the following retry is offline",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "HTTP 403 revokes retained data even if the following retry is offline",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "HTTP 404 revokes retained data even if the following retry is offline",
+      "result": "success"
+    },
+    {
+      "file": "custom_loading_test.dart",
+      "name": "helper awaits callbacks and releases overlapping work",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "HTTP 410 revokes retained data even if the following retry is offline",
+      "result": "success"
+    },
+    {
+      "file": "custom_loading_test.dart",
+      "name": "failure releases overlay and propagates error",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "HTTP 423 revokes retained data even if the following retry is offline",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "previous data is unavailable after a cache scope change",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "previous data is unavailable after a session change",
+      "result": "success"
+    },
+    {
+      "file": "status_builder_test.dart",
+      "name": "a delayed response cannot enter a replacement account or a closed cubit",
+      "result": "success"
+    },
+    {
+      "file": "pagify_lifecycle_test.dart",
+      "name": "interface changes retain successful rows without another request",
+      "result": "success"
+    },
+    {
+      "file": "pagify_lifecycle_test.dart",
+      "name": "manual load-more and retry preserve the failed page and source items",
+      "result": "success"
+    },
+    {
+      "file": "pagify_lifecycle_test.dart",
+      "name": "scroll failures are caught and retry completes the same page",
+      "result": "success"
+    },
+    {
+      "file": "pagify_lifecycle_test.dart",
+      "name": "refresh waits, coalesces duplicate requests and releases on disposal",
+      "result": "success"
+    },
+    {
+      "file": "pagify_lifecycle_test.dart",
+      "name": "confirmed mutations can replace a pending first-page read",
+      "result": "success"
+    },
+    {
+      "file": "pagify_lifecycle_test.dart",
+      "name": "a replacement scope wins over an older pending request",
+      "result": "success"
+    },
+    {
+      "file": "default_bottom_sheet_test.dart",
+      "name": "shared sheet returns typed selection and consumes keyboard inset once",
+      "result": "success"
+    },
+    {
+      "file": "default_bottom_sheet_test.dart",
+      "name": "builder sheets keep dismissal behavior configurable",
+      "result": "success"
+    },
+    {
+      "file": "connection_status_listener_test.dart",
+      "name": "connection toasts never refresh reads; only a pull refresh does",
+      "result": "success"
+    },
+    {
+      "file": "connection_status_listener_test.dart",
+      "name": "starting offline reports disconnection once",
+      "result": "success"
+    },
+    {
+      "file": "connection_status_listener_test.dart",
+      "name": "a stale initial platform check cannot overwrite a newer event",
+      "result": "success"
+    },
+    {
+      "file": "connection_status_listener_test.dart",
+      "name": "resume checks only platform status and does not refresh reads",
+      "result": "success"
+    },
+    {
+      "file": "connection_status_listener_test.dart",
+      "name": "disposing cancels listening and ignores an unfinished check",
+      "result": "success"
+    },
+    {
+      "file": "read_feedback_test.dart",
+      "name": "collapsing a dropdown cancels its read and reopening loads again",
+      "result": "success"
+    },
+    {
+      "file": "read_feedback_test.dart",
+      "name": "identical active read errors group but a later failure appears again",
+      "result": "success"
+    },
+    {
+      "file": "read_feedback_test.dart",
+      "name": "retained error fits narrow enlarged text with TextDirection.rtl",
+      "result": "success"
+    },
+    {
+      "file": "read_feedback_test.dart",
+      "name": "retained error fits narrow enlarged text with TextDirection.ltr",
+      "result": "success"
+    },
+    {
+      "file": "read_feedback_test.dart",
+      "name": "dropdown keeps selectable rows on failure, retries once and replaces with empty",
+      "result": "success"
+    },
+    {
+      "file": "read_feedback_test.dart",
+      "name": "dropdown first-load error allows pull refresh and fresh rows remain selectable",
+      "result": "success"
+    },
+    {
+      "file": "read_feedback_test.dart",
+      "name": "dropdown caches empty success and reopens empty offline (persist: true)",
+      "result": "success"
+    },
+    {
+      "file": "read_feedback_test.dart",
+      "name": "dropdown caches empty success and reopens empty offline (persist: false)",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "glass backdrop press keeps editing steady: false",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "glass backdrop press keeps editing steady: true",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "glass preserves form validation and icon actions: TextDirection.rtl",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "glass preserves form validation and icon actions: TextDirection.ltr",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "unused list requests are cancelled: dispose=false",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "unused list requests are cancelled: dispose=true",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "contrast and theme changes retain uncontrolled input and focus",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "password visibility shares the field surface and preserves text",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "new credentials can request password generation hints",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "plain input remains editable: false, true, null",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "final Ranking.listView action clears floating navigation",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "plain input remains editable: true, false, null",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "plain input remains editable: true, true, true",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "final Ranking.gridView action clears floating navigation",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "outside taps dismiss focus: true",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "final Ranking.adaptiveGrid action clears floating navigation",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "outside taps dismiss focus: false",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "initial text survives rebuilds and form reset restores it",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "disabled date input does not open its picker",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "empty and error actions retain scroll clearance and refresh",
+      "result": "success"
+    },
+    {
+      "file": "default_text_field_test.dart",
+      "name": "unbounded multiline text grows and submits without losing focus",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "empty list is retained on reopening with persist=true, cacheEmpty=true",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "empty list is retained on reopening with persist=true, cacheEmpty=false",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "empty list is retained on reopening with persist=false, cacheEmpty=true",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "empty list is retained on reopening with persist=false, cacheEmpty=false",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "a replacement query prefers its exact cached empty result",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "offline filter changes restore cache before the API callback",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "the supplied scroll controller tracks the visible collection",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "public refresh retains results, allows pull refresh and revokes forbidden data",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "private withData refresh retains results, allows pull refresh and revokes forbidden data",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "withData collections retain a successful empty result after offline refresh",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_header_lifecycle_test.dart",
+      "name": "initial skeleton and later-page indicator are separate (reverse: false)",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "refreshing an outgoing page after logout does not dispatch a request",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "cancelled pages do not display errors or notify error listeners",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "keeps previous results through a failed replacement and retries",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_header_lifecycle_test.dart",
+      "name": "initial skeleton and later-page indicator are separate (reverse: true)",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.listView preserves connection messages and retries the failed page",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.listView preserves server messages and retries the failed page",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.listView preserves pagify messages and retries the failed page",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.listView reaches the API despite an offline interface hint",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.gridView preserves connection messages and retries the failed page",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.gridView preserves server messages and retries the failed page",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.gridView preserves pagify messages and retries the failed page",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.gridView reaches the API despite an offline interface hint",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.adaptiveGrid preserves connection messages and retries the failed page",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.adaptiveGrid preserves server messages and retries the failed page",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.adaptiveGrid preserves pagify messages and retries the failed page",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_header_lifecycle_test.dart",
+      "name": "Ranking.listView retains header reads and input through list states",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "Ranking.adaptiveGrid reaches the API despite an offline interface hint",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "pagination failure retains items and recovers by pull refresh",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_error_test.dart",
+      "name": "a filtered pagination failure retries the same page without losing source items",
+      "result": "success"
+    },
+    {
+      "file": "app_pagify_header_lifecycle_test.dart",
+      "name": "Ranking.adaptiveGrid retains header reads and input through list states",
+      "result": "success"
+    },
+    {
+      "file": "permission_views_test.dart",
+      "name": "location returns the selected choice: true",
+      "result": "success"
+    },
+    {
+      "file": "permission_views_test.dart",
+      "name": "location returns the selected choice: false",
+      "result": "success"
+    },
+    {
+      "file": "permission_views_test.dart",
+      "name": "location dismissal does not opt in",
+      "result": "success"
+    },
+    {
+      "file": "cursor_pagify_test.dart",
+      "name": "failed refresh retains rows and retries the first cursor",
+      "result": "success"
+    },
+    {
+      "file": "cursor_pagify_test.dart",
+      "name": "disposed cursor never merges an outstanding private page",
+      "result": "success"
+    },
+    {
+      "file": "cursor_pagify_test.dart",
+      "name": "failed page retries its opaque cursor and coalesces loading",
+      "result": "success"
+    },
+    {
+      "file": "cursor_pagify_test.dart",
+      "name": "late pages cannot restore cleared private content",
+      "result": "success"
+    },
+    {
+      "file": "cursor_pagify_test.dart",
+      "name": "context window invalidates an older request without losing its cursor",
+      "result": "success"
+    },
+    {
+      "file": "permission_views_test.dart",
+      "name": "location supports ar with large text on a small screen",
+      "result": "success"
+    },
+    {
+      "file": "permission_views_test.dart",
+      "name": "location supports en with large text on a small screen",
+      "result": "success"
+    },
+    {
+      "file": "permission_views_test.dart",
+      "name": "notifications returns the selected choice: true",
+      "result": "success"
+    },
+    {
+      "file": "permission_views_test.dart",
+      "name": "notifications returns the selected choice: false",
+      "result": "success"
+    },
+    {
+      "file": "permission_views_test.dart",
+      "name": "notifications dismissal does not opt in",
+      "result": "success"
+    },
+    {
+      "file": "permission_views_test.dart",
+      "name": "notifications supports ar with large text on a small screen",
+      "result": "success"
+    },
+    {
+      "file": "permission_views_test.dart",
+      "name": "notifications supports en with large text on a small screen",
+      "result": "success"
+    },
+    {
+      "file": "app_text_style_test.dart",
+      "name": "legacy labels retain inherited size and regular weight",
+      "result": "success"
+    },
+    {
+      "file": "app_text_style_test.dart",
+      "name": "manager style keeps its weight, size and line height",
+      "result": "success"
+    },
+    {
+      "file": "app_text_style_test.dart",
+      "name": "explicit overrides take precedence, including regular weight",
+      "result": "success"
+    },
+    {
+      "file": "app_text_style_test.dart",
+      "name": "icon labels honor styles and retain the legacy fallback size",
+      "result": "success"
+    },
+    {
+      "file": "app_text_style_test.dart",
+      "name": "weight-only styles inherit size and system text scaling",
+      "result": "success"
+    },
+    {
+      "file": "app_text_style_test.dart",
+      "name": "both shared button labels use the supplied typography",
+      "result": "success"
+    },
+    {
+      "file": "app_glass_icon_button_test.dart",
+      "name": "glass press resets after cancellation: enabled=true, reduceMotion=false",
+      "result": "success"
+    },
+    {
+      "file": "app_glass_icon_button_test.dart",
+      "name": "glass press resets after cancellation: enabled=true, reduceMotion=true",
+      "result": "success"
+    },
+    {
+      "file": "app_glass_icon_button_test.dart",
+      "name": "glass press resets after cancellation: enabled=false, reduceMotion=false",
+      "result": "success"
+    },
+    {
+      "file": "app_glass_icon_button_test.dart",
+      "name": "glass press resets after cancellation: enabled=false, reduceMotion=true",
+      "result": "success"
+    },
+    {
+      "file": "app_glass_icon_button_test.dart",
+      "name": "shared actionable icon retains one accessible keyboard action",
+      "result": "success"
+    },
+    {
+      "file": "app_glass_icon_button_test.dart",
+      "name": "disabled icon remains inert after an enabled state change",
+      "result": "success"
+    },
+    {
+      "file": "custom_shimmer_test.dart",
+      "name": "sweep exits the complete Size(320.0, 1200.0) viewport before restarting",
+      "result": "success"
+    },
+    {
+      "file": "custom_shimmer_test.dart",
+      "name": "sweep exits the complete Size(1024.0, 600.0) viewport before restarting",
+      "result": "success"
+    },
+    {
+      "file": "custom_shimmer_test.dart",
+      "name": "one clock paints shapes without rebuilding content",
+      "result": "success"
+    },
+    {
+      "file": "custom_shimmer_test.dart",
+      "name": "motion policy stops the clock (reduced: true)",
+      "result": "success"
+    },
+    {
+      "file": "custom_shimmer_test.dart",
+      "name": "motion policy stops the clock (reduced: false)",
+      "result": "success"
+    },
+    {
+      "file": "custom_shimmer_test.dart",
+      "name": "hidden tabs and background pause then resume",
+      "result": "success"
+    }
+  ],
+  "completed_successfully": true,
+  "mode": "full",
+  "suite": "core"
+}

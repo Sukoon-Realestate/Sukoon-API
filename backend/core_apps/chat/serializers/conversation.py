@@ -128,16 +128,12 @@ class ConversationSerializer(serializers.ModelSerializer):
         return ConversationParticipantSerializer(other, context=self.context).data
 
     def get_unread_count(self, obj) -> int:
-        request = self.context.get("request")
-        if not request or not request.user:
-            return 0
-        request_user = request.user
-        # ? participant_set is prefetched with prefetch_related — no extra query
-        participant = next(
-            (p for p in obj.participant_set.all() if p.user_id == request_user.pk),
-            None,
-        )
-        return participant.unread_count if participant else 0
+        from core_apps.chat.services.group_access import unread_count
+
+        participant = self._read(obj).participant
+        if hasattr(participant, "effective_unread_count"):
+            return participant.effective_unread_count
+        return unread_count(obj, participant)
 
     def get_policy(self, obj):
         from core_apps.chat.moderation.policy import projection

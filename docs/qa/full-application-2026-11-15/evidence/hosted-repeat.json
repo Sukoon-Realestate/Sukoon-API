@@ -1,0 +1,1168 @@
+[
+  {
+    "path": "/health/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.715,
+    "headers": {
+      "content-type": "application/json",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 15,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/health/"
+  },
+  {
+    "path": "/api/v1/homepage/?page=1&rental_offers_version=1",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.547,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 10151,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/homepage/?page=1&rental_offers_version=1"
+  },
+  {
+    "path": "/api/v1/properties/types/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.372,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 910,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/properties/types/"
+  },
+  {
+    "path": "/api/v1/properties/cities/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.425,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 4033,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/properties/cities/"
+  },
+  {
+    "path": "/api/v1/properties/governorates/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.385,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 1609,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/properties/governorates/"
+  },
+  {
+    "path": "/api/v1/pages/about-us/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.41,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 1718,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/pages/about-us/"
+  },
+  {
+    "path": "/api/v1/pages/privacy-policy/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.405,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 2346,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/pages/privacy-policy/"
+  },
+  {
+    "path": "/api/v1/pages/terms/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.426,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 2307,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/pages/terms/"
+  },
+  {
+    "path": "/.well-known/assetlinks.json",
+    "method": "GET",
+    "status": 504,
+    "expected": [
+      200
+    ],
+    "outcome": "FAIL",
+    "seconds": 0.635,
+    "headers": {
+      "content-type": "text/html",
+      "cache-control": "no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 1263,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/.well-known/assetlinks.json"
+  },
+  {
+    "path": "/.well-known/apple-app-site-association",
+    "method": "GET",
+    "status": 504,
+    "expected": [
+      200
+    ],
+    "outcome": "FAIL",
+    "seconds": 0.624,
+    "headers": {
+      "content-type": "text/html",
+      "cache-control": "no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 1263,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/.well-known/apple-app-site-association"
+  },
+  {
+    "path": "/api/v1/admin/session/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.381,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/session/"
+  },
+  {
+    "path": "/api/v1/admin/dashboard/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.316,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/dashboard/"
+  },
+  {
+    "path": "/api/v1/admin/users/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.637,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/users/"
+  },
+  {
+    "path": "/api/v1/admin/kyc/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.328,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/kyc/"
+  },
+  {
+    "path": "/api/v1/admin/properties/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.37,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/properties/"
+  },
+  {
+    "path": "/api/v1/admin/settings/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.342,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/settings/"
+  },
+  {
+    "path": "/api/v1/admin/system/health/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.336,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/system/health/"
+  },
+  {
+    "path": "/api/v1/admin/system/logs/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.42,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/system/logs/"
+  },
+  {
+    "path": "/api/v1/admin/analytics/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.411,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/analytics/"
+  },
+  {
+    "path": "/api/v1/admin/support/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.384,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/support/"
+  },
+  {
+    "path": "/api/v1/auth/security/sessions/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.411,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/auth/security/sessions/"
+  },
+  {
+    "path": "/api/v1/auth/account-closure/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.363,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/auth/account-closure/"
+  },
+  {
+    "path": "/api/v1/properties/saved/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.334,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/properties/saved/"
+  },
+  {
+    "path": "/api/v1/properties/owned/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.499,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/properties/owned/"
+  },
+  {
+    "path": "/api/v1/properties/owner/dashboard/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.359,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/properties/owner/dashboard/"
+  },
+  {
+    "path": "/api/v1/notifications/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.725,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/notifications/"
+  },
+  {
+    "path": "/api/v1/notifications/settings/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.372,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/notifications/settings/"
+  },
+  {
+    "path": "/api/v1/support/",
+    "method": "GET",
+    "status": 404,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.337,
+    "headers": {
+      "content-type": "text/html; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 179,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/support/"
+  },
+  {
+    "path": "/api/v1/features/v1/housing-groups/",
+    "method": "GET",
+    "status": 403,
+    "expected": [
+      401,
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.35,
+    "headers": {
+      "content-type": "application/json",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 92,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/features/v1/housing-groups/"
+  },
+  {
+    "path": "/api/v1/homepage/?page=0",
+    "method": "GET",
+    "status": 404,
+    "expected": [
+      200,
+      400,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.473,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 39,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/homepage/?page=0"
+  },
+  {
+    "path": "/api/v1/homepage/?page=-1",
+    "method": "GET",
+    "status": 404,
+    "expected": [
+      200,
+      400,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.368,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 39,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/homepage/?page=-1"
+  },
+  {
+    "path": "/api/v1/homepage/?page=abc",
+    "method": "GET",
+    "status": 404,
+    "expected": [
+      200,
+      400,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.364,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 39,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/homepage/?page=abc"
+  },
+  {
+    "path": "/api/v1/homepage/?page=999999",
+    "method": "GET",
+    "status": 404,
+    "expected": [
+      200,
+      400,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.495,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 39,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/homepage/?page=999999"
+  },
+  {
+    "path": "/api/v1/homepage/?page_size=-1",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200,
+      400,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.495,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 10140,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/homepage/?page_size=-1"
+  },
+  {
+    "path": "/api/v1/homepage/?min_price=abc",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200,
+      400,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.494,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 10141,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/homepage/?min_price=abc"
+  },
+  {
+    "path": "/api/v1/homepage/?min_price=10000&max_price=100",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200,
+      400,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.427,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 10157,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/homepage/?min_price=10000&max_price=100"
+  },
+  {
+    "path": "/api/v1/homepage/?ordering=invalid",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200,
+      400,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.442,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 10144,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/homepage/?ordering=invalid"
+  },
+  {
+    "path": "/api/v1/admin/users/",
+    "method": "GET",
+    "status": 401,
+    "expected": [
+      401,
+      403
+    ],
+    "outcome": "PASS",
+    "seconds": 0.377,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 66,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/users/"
+  },
+  {
+    "path": "/api/v1/admin/users/",
+    "method": "OPTIONS",
+    "status": 401,
+    "expected": [
+      200,
+      401,
+      403
+    ],
+    "outcome": "PASS",
+    "seconds": 0.379,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "private, no-store",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin"
+    },
+    "bytes": 71,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/admin/users/"
+  },
+  {
+    "path": "/.env",
+    "method": "GET",
+    "status": 404,
+    "expected": [
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.378,
+    "headers": {
+      "content-type": "text/html; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 179,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/.env"
+  },
+  {
+    "path": "/.git/config",
+    "method": "GET",
+    "status": 404,
+    "expected": [
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.445,
+    "headers": {
+      "content-type": "text/html; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 179,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/.git/config"
+  },
+  {
+    "path": "/api/v1/qa-nonexistent-route/",
+    "method": "GET",
+    "status": 404,
+    "expected": [
+      403,
+      404
+    ],
+    "outcome": "PASS",
+    "seconds": 0.35,
+    "headers": {
+      "content-type": "text/html; charset=utf-8",
+      "x-frame-options": "DENY",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "same-origin",
+      "cache-control": "private"
+    },
+    "bytes": 179,
+    "traceback_exposed": false,
+    "final_url": "https://api.sukoon.rent/api/v1/qa-nonexistent-route/"
+  },
+  {
+    "path": "/ar",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.654,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 702567,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/ar"
+  },
+  {
+    "path": "/en",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.544,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 688515,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/en"
+  },
+  {
+    "path": "/ar/privacy",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.365,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 76801,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/ar/privacy"
+  },
+  {
+    "path": "/en/privacy",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.334,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 73189,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/en/privacy"
+  },
+  {
+    "path": "/ar/terms",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.364,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 71992,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/ar/terms"
+  },
+  {
+    "path": "/en/terms",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.407,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 69133,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/en/terms"
+  },
+  {
+    "path": "/admin/login",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.307,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 17848,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/admin/login"
+  },
+  {
+    "path": "/admin/",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.367,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 17588,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/admin/"
+  },
+  {
+    "path": "/admin/users",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.333,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 18092,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/admin/users"
+  },
+  {
+    "path": "/admin/properties",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.316,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 18102,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/admin/properties"
+  },
+  {
+    "path": "/admin/financials",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.368,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 18102,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/admin/financials"
+  },
+  {
+    "path": "/admin/roles",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.325,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 18092,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/admin/roles"
+  },
+  {
+    "path": "/admin/support",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.314,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 18096,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/admin/support"
+  },
+  {
+    "path": "/admin/system/health",
+    "method": "GET",
+    "status": 200,
+    "expected": [
+      200
+    ],
+    "outcome": "PASS",
+    "seconds": 0.336,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "strict-transport-security": "max-age=63072000"
+    },
+    "bytes": 18600,
+    "traceback_exposed": false,
+    "final_url": "https://www.sukoon.rent/admin/system/health"
+  }
+]

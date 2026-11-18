@@ -1,0 +1,13 @@
+{
+  "before": {
+    "errors": 91,
+    "warnings": 7
+  },
+  "after": {
+    "errors": 91,
+    "warnings": 7
+  },
+  "new_findings": 0,
+  "removed_findings": 0,
+  "scope": "Read-only baseline verification only; Sprint 2 lint fixes not started."
+}

@@ -251,9 +251,10 @@ def test_sourcing_admin_form_displays_requirements_and_commits_canonical_recomme
     from django.test import Client
     from django.urls import reverse
 
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     case, _ = assistance(company_setup)
     agent = operator("support")
     assign(case, agent)

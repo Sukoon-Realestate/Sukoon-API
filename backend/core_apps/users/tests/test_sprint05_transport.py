@@ -89,4 +89,13 @@ def test_converted_identity_transport_contract(user, row, method, variant):
         path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
     else:
         expected = json.loads((EVIDENCE / "transport-contracts.json").read_text())
-        assert actual == expected[key]
+        from tools.qa.dependency_contracts import drf_318_contract
+
+        assert actual == drf_318_contract(
+            expected[key],
+            required_payload=(
+                row["route"] == "api/v1/auth/security/challenges/"
+                and method == "POST" and authenticated
+                and body_format in {"multipart", "urlencoded"}
+            ),
+        )

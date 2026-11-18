@@ -1,0 +1,6 @@
+{
+  "bundle_id": "com.app.sokoon.sprint3qa",
+  "flavor_replacements": 6,
+  "project_sha256": "ef17247e61f14f751e19e353068fdcdf2bd3a9fc7f5ae2fc5cd9b944d97c6d82",
+  "scope": "Isolated snapshot only. Every Runner flavor uses the QA ID; RunnerTests identifiers are unchanged."
+}

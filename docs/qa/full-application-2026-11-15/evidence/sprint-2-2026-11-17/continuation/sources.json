@@ -1,0 +1,14 @@
+{
+  "frontend/next.config.ts": "f4c38bb93d0369f6674fc95d86c8eba85e7094e89a0d44e619f67cac76f7ad93",
+  "frontend/landing/next.config.ts": "8ae5bff96481cfccfb93c1ebd33c91b83a4692ba4977d222d0783e5dceab2c18",
+  "frontend/src/lib/api/client.ts": "32319a7e2c98ca214b33eea6901ba84229cc824c1f33c08f7435b7cb37ec943d",
+  "frontend/src/lib/api/types.ts": "5bad24aa2ba11eef757710ed4aeecc9abfd7ef8540dba0b3d079d7b04cef84c5",
+  "frontend/src/lib/api/mockHandler.ts": "ce89525b865d38b1f4824366a6f9795ec66d9d374253286c187863f3e3347c00",
+  "frontend/src/components/security/StaffIdentitySetup.tsx": "78ab8d0820c273fc19f255246f199b8b9d932a4f3fce3c4ea48379625e62ce1d",
+  "frontend/scripts/qa-admin-browser.cjs": "8b109b76aee697c39a36da110d9bd9a3b993c14e3fd2f7287d55b1d1ef3799e3",
+  "frontend/tests/admin-headers.test.cjs": "dac940b0c5f5b68b5b7420a21c39ac357a57871ca2310e49c0fbdf6a0626aaa2",
+  "frontend/tests/live-authority.test.cjs": "d317a9730c556a6a79192eb4b6a7f1c2f0f81fc34763d157734d4edb36773280",
+  "frontend/landing/tests/source-loader.mjs": "4b6208a43fce4af84789b51493917c291809433097298546dee0f8909bb10d43",
+  "frontend/landing/tests/admin-navigation.test.mjs": "5356a917c0c9210374e623ae30aa33dcae721744aa8642659a0e717ed189a8ce",
+  "frontend/landing/tests/public-site-contract.test.mjs": "1b04d552ff48991a2353948711927a60ff0f2b78445a702481407bd45462d73d"
+}

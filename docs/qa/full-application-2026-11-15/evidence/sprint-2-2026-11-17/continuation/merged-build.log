@@ -1,0 +1,83 @@
+
+> sukoon-landing@0.1.0 prebuild
+> node scripts/prepare-design-docs.mjs
+
+
+> sukoon-landing@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.4.6 (webpack)
+✓ Running next.config.ts took 116ms
+- Experiments (use with caution):
+  ✓ globalNotFound
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 4.2s
+  Running TypeScript ...
+  Finished TypeScript in 2.6s ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/46) ...
+  Generating static pages using 9 workers (11/46) 
+  Generating static pages using 9 workers (22/46) 
+  Generating static pages using 9 workers (34/46) 
+✓ Generating static pages using 9 workers (46/46) in 367ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /_not-found
+├   /[lang]
+│ ├ ● /ar
+│ └ ● /en
+├   /[lang]/[legal]
+│ ├ ● /ar/privacy
+│ ├ ● /ar/terms
+│ ├ ● /ar/delete-account
+│ └ ● [+5 more paths]
+├ ● /[lang]/[legal]/opengraph-image-9815hz/[__metadata_id__]
+├ ● /[lang]/opengraph-image-1ze6p7/[__metadata_id__]
+├ ○ /admin
+├ ○ /admin/account-closure
+├ ○ /admin/analytics
+├ ○ /admin/executive
+├ ○ /admin/financials
+├ ○ /admin/financials/payouts
+├ ○ /admin/financials/refunds
+├ ○ /admin/financials/transactions
+├ ○ /admin/kyc
+├ ○ /admin/kyc/review
+├ ○ /admin/login
+├ ○ /admin/moderation
+├ ○ /admin/notifications
+├ ƒ /admin/password-reset/[uid]/[token]
+├ ○ /admin/properties
+├ ƒ /admin/properties/[id]
+├ ○ /admin/properties/review
+├ ○ /admin/properties/tours
+├ ○ /admin/reports
+├ ○ /admin/reports/chat-policy
+├ ○ /admin/reports/overview
+├ ○ /admin/roles
+├ ○ /admin/security
+├ ○ /admin/settings
+├ ○ /admin/support
+├ ƒ /admin/support/[id]
+├ ○ /admin/system/health
+├ ○ /admin/system/logs
+├ ○ /admin/users
+├ ƒ /admin/users/[id]
+├ ○ /admin/users/reports
+├ ○ /admin/users/suspended
+├ ○ /apple-icon.png
+├ ○ /icon.png
+├ ○ /llms.txt
+├ ○ /robots.txt
+└ ○ /sitemap.xml
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

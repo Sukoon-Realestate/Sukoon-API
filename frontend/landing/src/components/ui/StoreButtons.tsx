@@ -38,7 +38,8 @@ export function StoreButtons({
       {stores.map(({ name, Mark }) => (
         <li key={name}>
           <span
-            aria-label={name}
+            aria-label={`${name}: ${dict.store.unavailable}`}
+            aria-disabled={true}
             className={clsx(
               "flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 ring-1 sm:min-w-40 sm:justify-start sm:gap-3 sm:px-4.5",
               light
@@ -49,6 +50,7 @@ export function StoreButtons({
             <Mark className="size-5 shrink-0 sm:size-6" />
             <span className="flex flex-col items-start leading-tight" aria-hidden>
               <span className="whitespace-nowrap font-[family-name:var(--font-latin)] text-sm font-semibold sm:text-base">{name}</span>
+              <span className="text-xs">{dict.store.unavailable}</span>
             </span>
           </span>
         </li>

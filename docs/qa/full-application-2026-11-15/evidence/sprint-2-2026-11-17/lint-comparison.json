@@ -1,0 +1,1547 @@
+{
+  "before": {
+    "errors": 91,
+    "warnings": 7,
+    "findings": [
+      {
+        "file": "scripts/test-api-contract.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          }
+        ]
+      },
+      {
+        "file": "scripts/test-payouts-contract.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          }
+        ]
+      },
+      {
+        "file": "scripts/test-refunds-contract.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          }
+        ]
+      },
+      {
+        "file": "src/components/admin/pages/properties/[id]/page.tsx",
+        "messages": [
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 115,
+            "column": 17,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 119,
+            "endColumn": 19
+          }
+        ]
+      },
+      {
+        "file": "src/components/admin/pages/reports/chat-policy/PolicyMedia.tsx",
+        "messages": [
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 26,
+            "column": 79,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 26,
+            "endColumn": 157
+          }
+        ]
+      },
+      {
+        "file": "src/components/admin/pages/users/[id]/page.tsx",
+        "messages": [
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 128,
+            "column": 17,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 128,
+            "endColumn": 97
+          }
+        ]
+      },
+      {
+        "file": "src/components/properties/PropertyReview.tsx",
+        "messages": [
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 81,
+            "column": 170,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 81,
+            "endColumn": 274
+          }
+        ]
+      },
+      {
+        "file": "src/components/security/StaffIdentitySetup.tsx",
+        "messages": [
+          {
+            "ruleId": "react-hooks/set-state-in-effect",
+            "severity": 2,
+            "message": "Error: Calling setState synchronously within an effect can trigger cascading renders\n\nEffects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:\n* Update external systems with the latest state from React.\n* Subscribe for updates from some external system, calling setState in a callback function when external state changes.\n\nCalling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).\n\n/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/components/security/StaffIdentitySetup.tsx:30:10\n  28 |   useEffect(() => {\n  29 |     const controller = new AbortController();\n> 30 |     void refresh(controller.signal).catch(failure => {\n     |          ^^^^^^^ Avoid calling setState() directly within an effect\n  31 |       if (!controller.signal.aborted) setError(failure instanceof Error ? failure.message : 'تعذّر تحميل حالة الموظفين.');\n  32 |     });\n  33 |     return () => controller.abort();",
+            "line": 30,
+            "column": 10,
+            "nodeType": null,
+            "endLine": 30,
+            "endColumn": 17
+          }
+        ]
+      },
+      {
+        "file": "src/components/ui/IdentityImage.tsx",
+        "messages": [
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 38,
+            "column": 21,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 38,
+            "endColumn": 70
+          },
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 40,
+            "column": 28,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 40,
+            "endColumn": 85
+          }
+        ]
+      },
+      {
+        "file": "src/lib/api/client.ts",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-explicit-any",
+            "severity": 2,
+            "message": "Unexpected any. Specify a different type.",
+            "line": 11,
+            "column": 10,
+            "nodeType": "TSAnyKeyword",
+            "messageId": "unexpectedAny",
+            "endLine": 11,
+            "endColumn": 13,
+            "suggestions": [
+              {
+                "messageId": "suggestUnknown",
+                "fix": {
+                  "range": [
+                    426,
+                    429
+                  ],
+                  "text": "unknown"
+                },
+                "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
+              },
+              {
+                "messageId": "suggestNever",
+                "fix": {
+                  "range": [
+                    426,
+                    429
+                  ],
+                  "text": "never"
+                },
+                "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
+              }
+            ]
+          },
+          {
+            "ruleId": "@typescript-eslint/no-explicit-any",
+            "severity": 2,
+            "message": "Unexpected any. Specify a different type.",
+            "line": 15,
+            "column": 37,
+            "nodeType": "TSAnyKeyword",
+            "messageId": "unexpectedAny",
+            "endLine": 15,
+            "endColumn": 40,
+            "suggestions": [
+              {
+                "messageId": "suggestUnknown",
+                "fix": {
+                  "range": [
+                    493,
+                    496
+                  ],
+                  "text": "unknown"
+                },
+                "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
+              },
+              {
+                "messageId": "suggestNever",
+                "fix": {
+                  "range": [
+                    493,
+                    496
+                  ],
+                  "text": "never"
+                },
+                "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
+              }
+            ]
+          },
+          {
+            "ruleId": "@typescript-eslint/no-explicit-any",
+            "severity": 2,
+            "message": "Unexpected any. Specify a different type.",
+            "line": 77,
+            "column": 20,
+            "nodeType": "TSAnyKeyword",
+            "messageId": "unexpectedAny",
+            "endLine": 77,
+            "endColumn": 23,
+            "suggestions": [
+              {
+                "messageId": "suggestUnknown",
+                "fix": {
+                  "range": [
+                    2584,
+                    2587
+                  ],
+                  "text": "unknown"
+                },
+                "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
+              },
+              {
+                "messageId": "suggestNever",
+                "fix": {
+                  "range": [
+                    2584,
+                    2587
+                  ],
+                  "text": "never"
+                },
+                "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
+              }
+            ]
+          },
+          {
+            "ruleId": "@next/next/no-location-assign-relative-destination",
+            "severity": 1,
+            "message": "Do not use `window.location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination",
+            "line": 97,
+            "column": 11,
+            "nodeType": "AssignmentExpression",
+            "messageId": "noLocationAssign",
+            "endLine": 97,
+            "endColumn": 43
+          }
+        ]
+      },
+      {
+        "file": "src/lib/api/types.ts",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-explicit-any",
+            "severity": 2,
+            "message": "Unexpected any. Specify a different type.",
+            "line": 188,
+            "column": 18,
+            "nodeType": "TSAnyKeyword",
+            "messageId": "unexpectedAny",
+            "endLine": 188,
+            "endColumn": 21,
+            "suggestions": [
+              {
+                "messageId": "suggestUnknown",
+                "fix": {
+                  "range": [
+                    4641,
+                    4644
+                  ],
+                  "text": "unknown"
+                },
+                "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
+              },
+              {
+                "messageId": "suggestNever",
+                "fix": {
+                  "range": [
+                    4641,
+                    4644
+                  ],
+                  "text": "never"
+                },
+                "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "file": "tests/admin-confirmation.test.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 19,
+            "column": 81,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 19,
+            "endColumn": 92
+          }
+        ]
+      },
+      {
+        "file": "tests/admin-navigation.test.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          }
+        ]
+      },
+      {
+        "file": "tests/analytics.test.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 6,
+            "column": 15,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 6,
+            "endColumn": 31
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 7,
+            "column": 34,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 7,
+            "endColumn": 61
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 44,
+            "column": 35,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 44,
+            "endColumn": 58
+          }
+        ]
+      },
+      {
+        "file": "tests/campaign-audience.test.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          }
+        ]
+      },
+      {
+        "file": "tests/financial-transactions-page.test.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 6,
+            "column": 27,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 6,
+            "endColumn": 49
+          }
+        ]
+      },
+      {
+        "file": "tests/live-authority.test.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 6,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 6,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 7,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 7,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 8,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 8,
+            "endColumn": 33
+          },
+          {
+            "ruleId": "@next/next/no-assign-module-variable",
+            "severity": 2,
+            "message": "Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable",
+            "line": 31,
+            "column": 5,
+            "nodeType": "VariableDeclaration",
+            "endLine": 35,
+            "endColumn": 19
+          },
+          {
+            "ruleId": "@next/next/no-assign-module-variable",
+            "severity": 2,
+            "message": "Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable",
+            "line": 54,
+            "column": 5,
+            "nodeType": "VariableDeclaration",
+            "endLine": 58,
+            "endColumn": 124
+          },
+          {
+            "ruleId": "@next/next/no-assign-module-variable",
+            "severity": 2,
+            "message": "Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable",
+            "line": 80,
+            "column": 5,
+            "nodeType": "VariableDeclaration",
+            "endLine": 85,
+            "endColumn": 134
+          }
+        ]
+      },
+      {
+        "file": "tests/property-export.test.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          }
+        ]
+      },
+      {
+        "file": "tests/review-loading.test.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 6,
+            "column": 15,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 6,
+            "endColumn": 31
+          }
+        ]
+      },
+      {
+        "file": "tests/support-information.test.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 12,
+            "column": 71,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 12,
+            "endColumn": 82
+          },
+          {
+            "ruleId": "@next/next/no-assign-module-variable",
+            "severity": 2,
+            "message": "Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable",
+            "line": 25,
+            "column": 3,
+            "nodeType": "VariableDeclaration",
+            "endLine": 25,
+            "endColumn": 95
+          }
+        ]
+      },
+      {
+        "file": "tests/system-health.test.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 6,
+            "column": 15,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 6,
+            "endColumn": 31
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 7,
+            "column": 34,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 7,
+            "endColumn": 61
+          }
+        ]
+      },
+      {
+        "file": "tests/tour-review-reason.test.cjs",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 1,
+            "column": 14,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 1,
+            "endColumn": 34
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 2,
+            "column": 16,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 2,
+            "endColumn": 45
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 3,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 3,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 4,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 4,
+            "endColumn": 30
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 5,
+            "column": 12,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 5,
+            "endColumn": 33
+          },
+          {
+            "ruleId": "@typescript-eslint/no-require-imports",
+            "severity": 2,
+            "message": "A `require()` style import is forbidden.",
+            "line": 13,
+            "column": 39,
+            "nodeType": "CallExpression",
+            "messageId": "noRequireImports",
+            "endLine": 13,
+            "endColumn": 52
+          },
+          {
+            "ruleId": "@next/next/no-assign-module-variable",
+            "severity": 2,
+            "message": "Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable",
+            "line": 40,
+            "column": 3,
+            "nodeType": "VariableDeclaration",
+            "endLine": 46,
+            "endColumn": 6
+          }
+        ]
+      }
+    ]
+  },
+  "after": {
+    "errors": 5,
+    "warnings": 7,
+    "findings": [
+      {
+        "file": "src/components/admin/pages/properties/[id]/page.tsx",
+        "messages": [
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 115,
+            "column": 17,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 119,
+            "endColumn": 19
+          }
+        ]
+      },
+      {
+        "file": "src/components/admin/pages/reports/chat-policy/PolicyMedia.tsx",
+        "messages": [
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 26,
+            "column": 79,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 26,
+            "endColumn": 157
+          }
+        ]
+      },
+      {
+        "file": "src/components/admin/pages/users/[id]/page.tsx",
+        "messages": [
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 128,
+            "column": 17,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 128,
+            "endColumn": 97
+          }
+        ]
+      },
+      {
+        "file": "src/components/properties/PropertyReview.tsx",
+        "messages": [
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 81,
+            "column": 170,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 81,
+            "endColumn": 274
+          }
+        ]
+      },
+      {
+        "file": "src/components/security/StaffIdentitySetup.tsx",
+        "messages": [
+          {
+            "ruleId": "react-hooks/set-state-in-effect",
+            "severity": 2,
+            "message": "Error: Calling setState synchronously within an effect can trigger cascading renders\n\nEffects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:\n* Update external systems with the latest state from React.\n* Subscribe for updates from some external system, calling setState in a callback function when external state changes.\n\nCalling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).\n\n/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/components/security/StaffIdentitySetup.tsx:30:10\n  28 |   useEffect(() => {\n  29 |     const controller = new AbortController();\n> 30 |     void refresh(controller.signal).catch(failure => {\n     |          ^^^^^^^ Avoid calling setState() directly within an effect\n  31 |       if (!controller.signal.aborted) setError(failure instanceof Error ? failure.message : 'تعذّر تحميل حالة الموظفين.');\n  32 |     });\n  33 |     return () => controller.abort();",
+            "line": 30,
+            "column": 10,
+            "nodeType": null,
+            "endLine": 30,
+            "endColumn": 17
+          }
+        ]
+      },
+      {
+        "file": "src/components/ui/IdentityImage.tsx",
+        "messages": [
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 38,
+            "column": 21,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 38,
+            "endColumn": 70
+          },
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+            "line": 40,
+            "column": 28,
+            "nodeType": "JSXOpeningElement",
+            "endLine": 40,
+            "endColumn": 85
+          }
+        ]
+      },
+      {
+        "file": "src/lib/api/client.ts",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-explicit-any",
+            "severity": 2,
+            "message": "Unexpected any. Specify a different type.",
+            "line": 11,
+            "column": 10,
+            "nodeType": "TSAnyKeyword",
+            "messageId": "unexpectedAny",
+            "endLine": 11,
+            "endColumn": 13,
+            "suggestions": [
+              {
+                "messageId": "suggestUnknown",
+                "fix": {
+                  "range": [
+                    426,
+                    429
+                  ],
+                  "text": "unknown"
+                },
+                "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
+              },
+              {
+                "messageId": "suggestNever",
+                "fix": {
+                  "range": [
+                    426,
+                    429
+                  ],
+                  "text": "never"
+                },
+                "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
+              }
+            ]
+          },
+          {
+            "ruleId": "@typescript-eslint/no-explicit-any",
+            "severity": 2,
+            "message": "Unexpected any. Specify a different type.",
+            "line": 15,
+            "column": 37,
+            "nodeType": "TSAnyKeyword",
+            "messageId": "unexpectedAny",
+            "endLine": 15,
+            "endColumn": 40,
+            "suggestions": [
+              {
+                "messageId": "suggestUnknown",
+                "fix": {
+                  "range": [
+                    493,
+                    496
+                  ],
+                  "text": "unknown"
+                },
+                "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
+              },
+              {
+                "messageId": "suggestNever",
+                "fix": {
+                  "range": [
+                    493,
+                    496
+                  ],
+                  "text": "never"
+                },
+                "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
+              }
+            ]
+          },
+          {
+            "ruleId": "@typescript-eslint/no-explicit-any",
+            "severity": 2,
+            "message": "Unexpected any. Specify a different type.",
+            "line": 77,
+            "column": 20,
+            "nodeType": "TSAnyKeyword",
+            "messageId": "unexpectedAny",
+            "endLine": 77,
+            "endColumn": 23,
+            "suggestions": [
+              {
+                "messageId": "suggestUnknown",
+                "fix": {
+                  "range": [
+                    2584,
+                    2587
+                  ],
+                  "text": "unknown"
+                },
+                "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
+              },
+              {
+                "messageId": "suggestNever",
+                "fix": {
+                  "range": [
+                    2584,
+                    2587
+                  ],
+                  "text": "never"
+                },
+                "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
+              }
+            ]
+          },
+          {
+            "ruleId": "@next/next/no-location-assign-relative-destination",
+            "severity": 1,
+            "message": "Do not use `window.location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination",
+            "line": 97,
+            "column": 11,
+            "nodeType": "AssignmentExpression",
+            "messageId": "noLocationAssign",
+            "endLine": 97,
+            "endColumn": 43
+          }
+        ]
+      },
+      {
+        "file": "src/lib/api/types.ts",
+        "messages": [
+          {
+            "ruleId": "@typescript-eslint/no-explicit-any",
+            "severity": 2,
+            "message": "Unexpected any. Specify a different type.",
+            "line": 188,
+            "column": 18,
+            "nodeType": "TSAnyKeyword",
+            "messageId": "unexpectedAny",
+            "endLine": 188,
+            "endColumn": 21,
+            "suggestions": [
+              {
+                "messageId": "suggestUnknown",
+                "fix": {
+                  "range": [
+                    4641,
+                    4644
+                  ],
+                  "text": "unknown"
+                },
+                "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
+              },
+              {
+                "messageId": "suggestNever",
+                "fix": {
+                  "range": [
+                    4641,
+                    4644
+                  ],
+                  "text": "never"
+                },
+                "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

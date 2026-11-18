@@ -12,6 +12,7 @@ from django.test import override_settings
 from django.urls import resolve
 from django.utils.translation import override
 from rest_framework.test import APIRequestFactory, force_authenticate
+from tools.qa.dependency_contracts import drf_318_contract
 
 EVIDENCE = Path(__file__).resolve().parents[3] / "sprints/evidence/sprint-08"
 
@@ -84,7 +85,7 @@ def test_frozen_commerce_transport_contracts(user, settings, mvp):
             ),
             "headers": {key: response.get(key) for key in expected["headers"]},
         }
-        wanted = {key: expected[key] for key in actual}
+        wanted = drf_318_contract({key: expected[key] for key in actual})
         for value in (actual, wanted):
             if value["headers"].get("Allow"):
                 value["headers"]["Allow"] = sorted(

@@ -28,12 +28,12 @@ function load(file, modules, globals = {}) {
 for (const root of ['src', 'landing/src']) {
   function client(fetch, live = true) {
     let mockCalls = 0;
-    const module = load(path.join(root, 'lib/api/client.ts'), {
+    const loadedModule = load(path.join(root, 'lib/api/client.ts'), {
       './config': { isBackendEnabled: () => live, API_BASE_URL: 'https://test.invalid' },
       './mockHandler': { handleMockRequest: () => { mockCalls++; return { demo: true }; } },
       '../basePath': { BASE_PATH: root === 'src' ? '' : '/admin' },
     }, { fetch });
-    return { api: module.apiClient, count: () => mockCalls };
+    return { api: loadedModule.apiClient, count: () => mockCalls };
   }
   test(`${root}: live failure cannot become a simulated command`, async () => {
     for (const fetch of [async () => { throw new Error('Disconnected'); },
@@ -48,15 +48,35 @@ for (const root of ['src', 'landing/src']) {
     await assert.rejects(c.api('/api/v1/admin/staff/invite/', { method: 'POST' }), /Invalid API response/);
     assert.equal(c.count(), 0);
   });
+  test(`${root}: error bodies preserve controlled status without trusting arbitrary JSON`, async () => {
+    for (const value of [null, false, [], 'message', { message: 42 }, { message: '   ' }, { message: 'Version conflict' }]) {
+      const c = client(async () => new Response(JSON.stringify(value), { status: 409 }));
+      await assert.rejects(c.api('/api/v1/admin/content/pages/test/', { method: 'POST' }), error => {
+        assert.equal(error.status, 409);
+        assert.equal(error.message, value?.message === 'Version conflict' ? 'Version conflict' : 'حدث خطأ في الاتصال بالخادم');
+        return true;
+      });
+      assert.equal(c.count(), 0);
+    }
+  });
+  test(`${root}: JSON request bodies retain falsy values and already encoded text`, async () => {
+    for (const body of [false, 0, { expected_revision: 0 }, '{"expected_revision":0}']) {
+      const c = client(async (_url, options) => {
+        assert.equal(options.body, typeof body === 'string' ? body : JSON.stringify(body));
+        return new Response(JSON.stringify({ message: 'OK', data: {} }));
+      });
+      await c.api('/api/v1/admin/content/pages/test/', { method: 'POST', body });
+    }
+  });
   test(`${root}: an old account response is discarded after a session change`, async () => {
     let token = 'first-account';
     let finish;
-    const module = load(path.join(root, 'lib/api/client.ts'), {
+    const loadedModule = load(path.join(root, 'lib/api/client.ts'), {
       './config': { isBackendEnabled: () => true, API_BASE_URL: 'https://test.invalid' },
       './mockHandler': { handleMockRequest: () => { throw new Error('No fallback'); } },
       '../basePath': { BASE_PATH: '/admin' },
     }, { window: {}, localStorage: { getItem: () => token }, fetch: () => new Promise(resolve => { finish = resolve; }) });
-    const pending = module.apiClient('/api/v1/admin/support/');
+    const pending = loadedModule.apiClient('/api/v1/admin/support/');
     token = 'second-account';
     finish(new Response(JSON.stringify({ message: 'Saved', data: { private: 'first account' } })));
     await assert.rejects(pending, /Account session changed/);
@@ -77,13 +97,13 @@ for (const root of ['src', 'landing/src']) {
       useState: value => { const i = stateIndex++; if (!(i in states)) states[i] = value; return [states[i], v => { states[i] = v; }]; },
       createElement: (type, props) => ({ type, props }),
     };
-    const module = load(path.join(root, 'context/AuthContext.tsx'), {
+    const loadedModule = load(path.join(root, 'context/AuthContext.tsx'), {
       react: { __esModule: true, default: react, ...react },
       'next/navigation': { useRouter: () => ({ push: () => {} }), usePathname: () => '/login' },
       '@/lib/api/client': { apiClient: api }, '@/lib/api/config': { isBackendEnabled: () => live },
       '@/lib/basePath': { adminPath: x => x, adminRelativePath: x => x },
     }, { localStorage: { getItem: k => storage.get(k), setItem: (k, v) => storage.set(k, v), removeItem: k => storage.delete(k) } });
-    return { value: () => { stateIndex = refIndex = 0; return module.AuthProvider({ children: null }).props.value; }, storage, mountRestore: () => effects[0]() };
+    return { value: () => { stateIndex = refIndex = 0; return loadedModule.AuthProvider({ children: null }).props.value; }, storage, mountRestore: () => effects[0]() };
   }
   test(`${root}: rejected password login never authenticates demo`, async () => {
     const a = auth(async () => { throw new Error('Rejected'); });

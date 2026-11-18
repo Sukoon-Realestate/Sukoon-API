@@ -301,9 +301,10 @@ def test_independent_administrators_cannot_overwrite_the_same_reviewed_head(
 def test_admin_page_uses_reviewed_head_and_preserves_form_on_conflict(
     policy_admin, client, settings
 ):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     client.force_login(policy_admin)
     path = "/admin/features/policydecision/publish/"
     response = client.get(path)

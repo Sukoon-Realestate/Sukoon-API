@@ -22,10 +22,10 @@ function panel(status, disabled = false, evidence = false) {
     const key = index++; if (!(key in states)) states[key] = initial;
     return [states[key], value => { states[key] = value; }];
   } };
-  const module = load('src/components/support/SupportInformationPanel.tsx', { react: hooks });
+  const loadedModule = load('src/components/support/SupportInformationPanel.tsx', { react: hooks });
   const render = () => {
     index = 0;
-    return elements(module.default({ requests: [{ id: 'request-one', revision: 4, prompt: 'Which entrance?', status,
+    return elements(loadedModule.default({ requests: [{ id: 'request-one', revision: 4, prompt: 'Which entrance?', status,
       answer_message_id: 'answer-one', history: [], evidence_requirement: evidence ? { min_attachments: 1 } : {},
       evidence_versions: evidence ? [{ id: 'version-one', version: 1, review_status: 'submitted', review_reason: '', files: [{ id: 'file-one', available: true }] }] : [] }], actions: { request_information: true, accept_information: true,
       return_information: true, withdraw_information: true, request_evidence: true, mark_evidence_conflicting: true }, disabled,

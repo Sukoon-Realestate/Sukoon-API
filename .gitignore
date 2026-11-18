@@ -85,3 +85,6 @@ private_virtual_tours/
 # Build-only tour validator runtime.
 backend/.runtime/
 backend/tools/virtual_tours/node_modules/
+
+# Private database backups and reset reports.
+.local-backups/

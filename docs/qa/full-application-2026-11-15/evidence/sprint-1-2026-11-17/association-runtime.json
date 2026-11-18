@@ -1,0 +1,22 @@
+[
+  {
+    "timestamp_utc": "2026-11-17T07:16:58.823848051Z",
+    "path": "/.well-known/assetlinks.json",
+    "status": 503
+  },
+  {
+    "timestamp_utc": "2026-11-17T07:16:59.885838792Z",
+    "path": "/.well-known/apple-app-site-association",
+    "status": 503
+  },
+  {
+    "timestamp_utc": "2026-11-17T07:17:01.510764048Z",
+    "path": "/.well-known/assetlinks.json",
+    "status": 503
+  },
+  {
+    "timestamp_utc": "2026-11-17T07:17:02.712659469Z",
+    "path": "/.well-known/apple-app-site-association",
+    "status": 503
+  }
+]

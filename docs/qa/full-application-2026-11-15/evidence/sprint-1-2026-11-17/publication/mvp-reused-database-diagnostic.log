@@ -1,0 +1,1943 @@
+mkdir -p /private/tmp/sprint1-publication-20261117/backend/mvp
+CHAT_PRIVATE_MEDIA_ROOT=/private/tmp/sprint1-publication-20261117/backend/storage/chat SUPPORT_PRIVATE_MEDIA_ROOT=/private/tmp/sprint1-publication-20261117/backend/storage/support VIRTUAL_TOUR_PRIVATE_ROOT=/private/tmp/sprint1-publication-20261117/backend/storage/tours EVIDENCE_PRIVATE_ROOT=/private/tmp/sprint1-publication-20261117/backend/storage/evidence SUKOON_MVP=true COVERAGE_FILE=/private/tmp/sprint1-publication-20261117/backend/mvp/.coverage MVP_COLLECTION_REPORT=/private/tmp/sprint1-publication-20261117/backend/mvp/collection.json \
+		/private/tmp/sprint1-20261117/app-env/bin/python -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" -q -rfE --ds=config.settings.postgres_test --reuse-db --junitxml=/private/tmp/sprint1-publication-20261117/backend/mvp/junit.xml
+........................................................................ [  1%]
+........................................................................ [  2%]
+........................................................................ [  3%]
+...................................................................FFFFF [  4%]
+....FFFFFFFFFFFFF....................................................... [  5%]
+.....................................................ss................. [  6%]
+........................................................................ [  8%]
+...........................................x............................ [  9%]
+........................................................................ [ 10%]
+........................................................................ [ 11%]
+........................................................................ [ 12%]
+...F.................................................................... [ 13%]
+........................................................................ [ 15%]
+...............F..F...............................................x..... [ 16%]
+......................................F................................. [ 17%]
+........................................................................ [ 18%]
+........................................................................ [ 19%]
+........................................................................ [ 20%]
+.................................................................F...... [ 21%]
+..............................................................
+=================================== FAILURES ===================================
+_ TestAdvertisingAPI.test_public_plan_list_is_ordered_localized_and_enveloped __
+core_apps/advertising/tests/test_advertising_api.py:103: in test_public_plan_list_is_ordered_localized_and_enveloped
+    assert [item["id"] for item in body["data"]["results"]] == [
+E   AssertionError: assert [] == ['weekly', 'm...ly', 'yearly']
+E
+E     Right contains 3 more items, first extra item: 'weekly'
+E     Use -v to get more diff
+_ TestAdvertisingAPI.test_create_replay_conflict_recovery_and_owner_isolation __
+core_apps/advertising/tests/test_advertising_api.py:127: in test_create_replay_conflict_recovery_and_owner_isolation
+    assert created.status_code == 201
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+_ TestAdvertisingAPI.test_rejects_fake_image_and_enforces_destination_ownership _
+core_apps/advertising/tests/test_advertising_api.py:183: in test_rejects_fake_image_and_enforces_destination_ownership
+    assert foreign["X-App-Error-Code"] == "not_eligible"
+E   AssertionError: assert 'not_available' == 'not_eligible'
+E
+E     - not_eligible
+E     + not_available
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Unsupported Media Type: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+_ TestAdvertisingAPI.test_property_offer_activation_payment_replay_and_public_feed _
+core_apps/advertising/tests/test_advertising_api.py:198: in test_property_offer_activation_payment_replay_and_public_feed
+    advertisement_id = created.json()["data"]["id"]
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: 'NoneType' object is not subscriptable
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+__ TestAdvertisingAPI.test_expired_rows_are_hidden_without_waiting_for_worker __
+core_apps/advertising/tests/test_advertising_api.py:244: in test_expired_rows_are_hidden_without_waiting_for_worker
+    advertisement_id = created.json()["data"]["id"]
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: 'NoneType' object is not subscriptable
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+______ test_informational_payment_snapshot_recovery_and_expired_retry[en] ______
+core_apps/advertising/tests/test_advertising_api.py:370: in test_informational_payment_snapshot_recovery_and_expired_retry
+    ad, url, body = pending_ad(auth_client)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'The selected plan is unavailable.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+______ test_informational_payment_snapshot_recovery_and_expired_retry[ar] ______
+core_apps/advertising/tests/test_advertising_api.py:370: in test_informational_payment_snapshot_recovery_and_expired_retry
+    ad, url, body = pending_ad(auth_client)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'الخطة المحددة غير متاحة.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+________ test_payment_revalidates_media_and_destination[missing_media] _________
+core_apps/advertising/tests/test_advertising_api.py:448: in test_payment_revalidates_media_and_destination
+    ad, url, body = pending_ad(
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'The selected plan is unavailable.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+_________ test_payment_revalidates_media_and_destination[transferred] __________
+core_apps/advertising/tests/test_advertising_api.py:448: in test_payment_revalidates_media_and_destination
+    ad, url, body = pending_ad(
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'The selected plan is unavailable.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+____________ test_payment_revalidates_media_and_destination[hidden] ____________
+core_apps/advertising/tests/test_advertising_api.py:448: in test_payment_revalidates_media_and_destination
+    ad, url, body = pending_ad(
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'The selected plan is unavailable.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+___________ test_payment_revalidates_media_and_destination[archived] ___________
+core_apps/advertising/tests/test_advertising_api.py:448: in test_payment_revalidates_media_and_destination
+    ad, url, body = pending_ad(
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'The selected plan is unavailable.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+___ test_payment_failure_rolls_back_activation_and_same_operation_can_retry ____
+core_apps/advertising/tests/test_advertising_api.py:475: in test_payment_failure_rolls_back_activation_and_same_operation_can_retry
+    ad, url, body = pending_ad(auth_client)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'The selected plan is unavailable.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+__________ test_public_media_and_feed_share_live_eligibility[future] ___________
+core_apps/advertising/tests/test_advertising_api.py:499: in test_public_media_and_feed_share_live_eligibility
+    ad, url, body = pending_ad(auth_client)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'The selected plan is unavailable.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+_________ test_public_media_and_feed_share_live_eligibility[placement] _________
+core_apps/advertising/tests/test_advertising_api.py:499: in test_public_media_and_feed_share_live_eligibility
+    ad, url, body = pending_ad(auth_client)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'The selected plan is unavailable.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+___________ test_public_media_and_feed_share_live_eligibility[media] ___________
+core_apps/advertising/tests/test_advertising_api.py:499: in test_public_media_and_feed_share_live_eligibility
+    ad, url, body = pending_ad(auth_client)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'The selected plan is unavailable.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+___________ test_public_media_and_feed_share_live_eligibility[owner] ___________
+core_apps/advertising/tests/test_advertising_api.py:499: in test_public_media_and_feed_share_live_eligibility
+    ad, url, body = pending_ad(auth_client)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'The selected plan is unavailable.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+__________ test_public_media_and_feed_share_live_eligibility[payment] __________
+core_apps/advertising/tests/test_advertising_api.py:499: in test_public_media_and_feed_share_live_eligibility
+    ad, url, body = pending_ad(auth_client)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+core_apps/advertising/tests/test_advertising_api.py:355: in pending_ad
+    assert response.status_code == 201, response.data
+E   AssertionError: {'data': None, 'errors': {'plan_id': ['not_available']}, 'key': 'error', 'message': 'The selected plan is unavailable.'}
+E   assert 400 == 201
+E    +  where 400 = <Response status_code=400, "application/json; charset=utf-8">.status_code
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+______ test_existing_audit_ad_media_recovery_and_mock_payment_activation _______
+core_apps/advertising/tests/test_advertising_api.py:614: in test_existing_audit_ad_media_recovery_and_mock_payment_activation
+    plan = AdvertisingPlan.objects.get(id="weekly")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/django/db/models/query.py:635: in get
+    raise self.model.DoesNotExist(
+E   core_apps.advertising.models.AdvertisingPlan.DoesNotExist: AdvertisingPlan matching query does not exist.
+_________________ test_route_family_contract[api-advertising] __________________
+core_apps/common/test_route_contracts.py:193: in test_route_family_contract
+    assert not changed, (
+E   AssertionError: 3 contract change(s) in api/advertising; if intended, regenerate with ROUTE_CONTRACTS_UPDATE=1.
+E     {
+E      "GET /api/v1/advertising/v1/plans/ anonymous mvp=off": {
+E       "expected": {
+E        "cache_control": "private, max-age=300, must-revalidate",
+E        "content_type": "application/json",
+E        "data": [
+E         "list",
+E         [
+E          "active",
+E          "duration_count",
+E          "duration_unit",
+E          "id",
+E          "price",
+E          "revision",
+E          "title"
+E         ]
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/advertising/v1/plans/",
+E        "served_by": "plan-list",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/advertising/v1/plans/",
+E        "served_by": "plan-list",
+E        "status": 200,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": [
+E         "list",
+E         "empty"
+E        ],
+E        "error_code": null,
+E        "cache_control": "private, max-age=300, must-revalidate"
+E       }
+E      },
+E      "GET /api/v1/advertising/v1/plans/ staff mvp=off": {
+E       "expected": {
+E        "cache_control": "private, max-age=300, must-revalidate",
+E        "content_type": "application/json",
+E        "data": [
+E         "list",
+E         [
+E          "active",
+E          "duration_count",
+E          "duration_unit",
+E          "id",
+E          "price",
+E          "revision",
+E          "title"
+E         ]
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/advertising/v1/plans/",
+E        "served_by": "plan-list",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/advertising/v1/plans/",
+E        "served_by": "plan-list",
+E        "status": 200,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": [
+E         "list",
+E         "empty"
+E        ],
+E        "error_code": null,
+E        "cache_control": "private, max-age=300, must-revalidate"
+E       }
+E      },
+E      "GET /api/v1/advertising/v1/plans/ tenant mvp=off": {
+E       "expected": {
+E        "cache_control": "private, max-age=300, must-revalidate",
+E        "content_type": "application/json",
+E        "data": [
+E         "list",
+E         [
+E          "active",
+E          "duration_count",
+E          "duration_unit",
+E          "id",
+E          "price",
+E          "revision",
+E          "title"
+E         ]
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/advertising/v1/plans/",
+E        "served_by": "plan-list",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/advertising/v1/plans/",
+E        "served_by": "plan-list",
+E        "status": 200,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": [
+E         "list",
+E         "empty"
+E        ],
+E        "error_code": null,
+E        "cache_control": "private, max-age=300, must-revalidate"
+E       }
+E      }
+E     }
+E   assert not {'GET /api/v1/advertising/v1/plans/ anonymous mvp=off': {'expected': {'cache_control': 'private, max-age=300, must-rev...ust-revalidate', 'content_type': 'application/json', 'data': ['list', 'empty'], 'envelope': ['data', 'message'], ...}}}
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/plans/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/plans/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/plans/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/operations/sample/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/operations/sample/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/operations/sample/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/advertising/v1/operations/sample/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/placements/tenant-home/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/placements/tenant-home/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/placements/tenant-home/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/
+____________________ test_route_family_contract[api-pages] _____________________
+core_apps/common/test_route_contracts.py:193: in test_route_family_contract
+    assert not changed, (
+E   AssertionError: 18 contract change(s) in api/pages; if intended, regenerate with ROUTE_CONTRACTS_UPDATE=1.
+E     {
+E      "GET /api/v1/pages/about-us/ anonymous mvp=off": {
+E       "expected": {
+E        "cache_control": "public, max-age=0, must-revalidate",
+E        "content_type": "application/json",
+E        "data": [
+E         "content",
+E         "content_format",
+E         "language",
+E         "revision",
+E         "slug",
+E         "title",
+E         "updated_at"
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/pages/about-us/",
+E        "served_by": "page-about-us",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/pages/about-us/",
+E        "served_by": "page-about-us",
+E        "status": 404,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": "NoneType",
+E        "error_code": "not_found",
+E        "cache_control": "private, no-store"
+E       }
+E      },
+E      "GET /api/v1/pages/about-us/ anonymous mvp=on": {
+E       "expected": {
+E        "cache_control": "public, max-age=0, must-revalidate",
+E        "content_type": "application/json",
+E        "data": [
+E         "content",
+E         "content_format",
+E         "language",
+E         "revision",
+E         "slug",
+E         "title",
+E         "updated_at"
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/pages/about-us/",
+E        "served_by": "page-about-us",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/pages/about-us/",
+E        "served_by": "page-about-us",
+E        "status": 404,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": "NoneType",
+E        "error_code": "not_found",
+E        "cache_control": "private, no-store"
+E       }
+E      },
+E      "GET /api/v1/pages/about-us/ staff mvp=off": {
+E       "expected": {
+E        "cache_control": "public, max-age=0, must-revalidate",
+E        "content_type": "application/json",
+E        "data": [
+E         "content",
+E         "content_format",
+E         "language",
+E         "revision",
+E         "slug",
+E         "title",
+E         "updated_at"
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/pages/about-us/",
+E        "served_by": "page-about-us",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/pages/about-us/",
+E        "served_by": "page-about-us",
+E        "status": 404,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": "NoneType",
+E        "error_code": "not_found",
+E        "cache_control": "private, no-store"
+E       }
+E      },
+E      "GET /api/v1/pages/about-us/ staff mvp=on": {
+E       "expected": {
+E        "cache_control": "public, max-age=0, must-revalidate",
+E        "content_type": "application/json",
+E        "data": [
+E         "content",
+E         "content_format",
+E         "language",
+E         "revision",
+E         "slug",
+E         "title",
+E         "updated_at"
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/pages/about-us/",
+E        "served_by": "page-about-us",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/pages/about-us/",
+E        "served_by": "page-about-us",
+E        "status": 404,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": "NoneType",
+E        "error_code": "not_found",
+E        "cache_control": "private, no-store"
+E       }
+E      },
+E      "GET /api/v1/pages/about-us/ tenant mvp=off": {
+E       "expected": {
+E        "cache_control": "public, max-age=0, must-revalidate",
+E        "content_type": "application/json",
+E        "data": [
+E         "content",
+E         "content_format",
+E         "language",
+E         "revision",
+E         "slug",
+E         "title",
+E         "updated_at"
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/pages/about-us/",
+E        "served_by": "page-about-us",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/pages/about-us/",
+E        "served_by": "page-about-us",
+E        "status": 404,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": "NoneType",
+E        "error_code": "not_found",
+E        "cache_control": "private, no-store"
+E       }
+E      }
+E     }
+E   assert not {'GET /api/v1/pages/about-us/ anonymous mvp=off': {'expected': {'cache_control': 'public, max-age=0, must-revalidate',...rivate, no-store', 'content_type': 'application/json', 'data': 'NoneType', 'envelope': ['data', 'message'], ...}}, ...}
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Bad Request: /api/v1/pages/release-notes/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/pages/release-notes/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/pages/release-notes/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/pages/release-notes/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/pages/release-notes/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/pages/release-notes/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/about-us/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/about-us/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/about-us/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/about-us/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/about-us/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/about-us/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/privacy-policy/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/privacy-policy/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/privacy-policy/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/privacy-policy/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/privacy-policy/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/privacy-policy/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/terms/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/terms/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/terms/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/terms/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/terms/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/terms/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/sample/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/sample/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/sample/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/sample/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/sample/
+WARNING  django.request:log.py:253 Not Found: /api/v1/pages/sample/
+__________________ test_route_family_contract[api-properties] __________________
+core_apps/common/test_route_contracts.py:193: in test_route_family_contract
+    assert not changed, (
+E   AssertionError: 6 contract change(s) in api/properties; if intended, regenerate with ROUTE_CONTRACTS_UPDATE=1.
+E     {
+E      "GET /api/v1/properties/types/ anonymous mvp=off": {
+E       "expected": {
+E        "cache_control": null,
+E        "content_type": "application/json",
+E        "data": [
+E         "list",
+E         [
+E          "description",
+E          "id",
+E          "is_active",
+E          "name",
+E          "revision",
+E          "slug",
+E          "sort_order"
+E         ]
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/properties/types/",
+E        "served_by": "property-type-list",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/properties/types/",
+E        "served_by": "property-type-list",
+E        "status": 200,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": [
+E         "list",
+E         "empty"
+E        ],
+E        "error_code": null,
+E        "cache_control": null
+E       }
+E      },
+E      "GET /api/v1/properties/types/ anonymous mvp=on": {
+E       "expected": {
+E        "cache_control": null,
+E        "content_type": "application/json",
+E        "data": [
+E         "list",
+E         [
+E          "description",
+E          "id",
+E          "is_active",
+E          "name",
+E          "revision",
+E          "slug",
+E          "sort_order"
+E         ]
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/properties/types/",
+E        "served_by": "property-type-list",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/properties/types/",
+E        "served_by": "property-type-list",
+E        "status": 200,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": [
+E         "list",
+E         "empty"
+E        ],
+E        "error_code": null,
+E        "cache_control": null
+E       }
+E      },
+E      "GET /api/v1/properties/types/ staff mvp=off": {
+E       "expected": {
+E        "cache_control": null,
+E        "content_type": "application/json",
+E        "data": [
+E         "list",
+E         [
+E          "description",
+E          "id",
+E          "is_active",
+E          "name",
+E          "revision",
+E          "slug",
+E          "sort_order"
+E         ]
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/properties/types/",
+E        "served_by": "property-type-list",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/properties/types/",
+E        "served_by": "property-type-list",
+E        "status": 200,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": [
+E         "list",
+E         "empty"
+E        ],
+E        "error_code": null,
+E        "cache_control": null
+E       }
+E      },
+E      "GET /api/v1/properties/types/ staff mvp=on": {
+E       "expected": {
+E        "cache_control": null,
+E        "content_type": "application/json",
+E        "data": [
+E         "list",
+E         [
+E          "description",
+E          "id",
+E          "is_active",
+E          "name",
+E          "revision",
+E          "slug",
+E          "sort_order"
+E         ]
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/properties/types/",
+E        "served_by": "property-type-list",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/properties/types/",
+E        "served_by": "property-type-list",
+E        "status": 200,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": [
+E         "list",
+E         "empty"
+E        ],
+E        "error_code": null,
+E        "cache_control": null
+E       }
+E      },
+E      "GET /api/v1/properties/types/ tenant mvp=off": {
+E       "expected": {
+E        "cache_control": null,
+E        "content_type": "application/json",
+E        "data": [
+E         "list",
+E         [
+E          "description",
+E          "id",
+E          "is_active",
+E          "name",
+E          "revision",
+E          "slug",
+E          "sort_order"
+E         ]
+E        ],
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "error_code": null,
+E        "route": "api/v1/properties/types/",
+E        "served_by": "property-type-list",
+E        "status": 200
+E       },
+E       "observed": {
+E        "route": "api/v1/properties/types/",
+E        "served_by": "property-type-list",
+E        "status": 200,
+E        "content_type": "application/json",
+E        "envelope": [
+E         "data",
+E         "message"
+E        ],
+E        "data": [
+E         "list",
+E         "empty"
+E        ],
+E        "error_code": null,
+E        "cache_control": null
+E       }
+E      }
+E     }
+E   assert not {'GET /api/v1/properties/types/ anonymous mvp=off': {'expected': {'cache_control': None, 'content_type': 'application/...rol': None, 'content_type': 'application/json', 'data': ['list', 'empty'], 'envelope': ['data', 'message'], ...}}, ...}
+------------------------------ Captured log call -------------------------------
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/ownership-proof/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/ownership-proof/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/ownership-proof/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/ownership-proof/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/ownership-proof/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/ownership-proof/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/message-context/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/message-context/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/message-context/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/message-context/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/message-context/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/message-context/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/day-plan/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/visits/day-plan/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/visits/day-plan/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/day-plan/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/visits/day-plan/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/visits/day-plan/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/arrival/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/time-proposals/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/closures/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/draft-review/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/draft-review/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/draft-review/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/draft-review/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/draft-review/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/draft-review/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/saved-search-reads/00000000-0000-4000-8000-000000000000/ack/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/saved-search-reads/00000000-0000-4000-8000-000000000000/ack/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/saved-search-reads/00000000-0000-4000-8000-000000000000/ack/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/saved-search-reads/00000000-0000-4000-8000-000000000000/ack/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/saved-search-reads/00000000-0000-4000-8000-000000000000/ack/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/saved-search-reads/00000000-0000-4000-8000-000000000000/ack/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/hidden-listings/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/hidden-listings/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/hidden-listings/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/hidden-listings/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/hidden-listings/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/hidden-listings/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/hidden-listings/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/hidden-listings/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/owner/properties/00000000-0000-4000-8000-000000000000/availability/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owners/00000000-0000-4000-8000-000000000000/profile/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owners/00000000-0000-4000-8000-000000000000/profile/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owners/00000000-0000-4000-8000-000000000000/profile/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owners/00000000-0000-4000-8000-000000000000/profile/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owners/00000000-0000-4000-8000-000000000000/profile/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owners/00000000-0000-4000-8000-000000000000/profile/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/home-reminder/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/home-reminder/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/order/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/order/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/order/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/order/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/order/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/order/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/operation-recovery/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/operation-recovery/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/operation-recovery/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/operation-recovery/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/operation-recovery/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/operation-recovery/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/viewing-companies/00000000-0000-4000-8000-000000000000/representatives/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/viewing-companies/00000000-0000-4000-8000-000000000000/representatives/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/viewing-companies/00000000-0000-4000-8000-000000000000/representatives/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/viewing-companies/00000000-0000-4000-8000-000000000000/representatives/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/viewing-companies/00000000-0000-4000-8000-000000000000/representatives/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/viewing-companies/00000000-0000-4000-8000-000000000000/representatives/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/creation-receipt/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/visits/creation-receipt/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/visits/creation-receipt/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/creation-receipt/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/visits/creation-receipt/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/visits/creation-receipt/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/resolve/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/resolve/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/resolve/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/resolve/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/resolve/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/commands/resolve/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/cities/00000000-0000-4000-8000-000000000000/districts/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/cities/00000000-0000-4000-8000-000000000000/districts/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/cities/00000000-0000-4000-8000-000000000000/districts/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/cities/00000000-0000-4000-8000-000000000000/districts/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/cities/00000000-0000-4000-8000-000000000000/districts/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/cities/00000000-0000-4000-8000-000000000000/districts/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/post-visit-decision/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/available_places/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/available_places/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/available_places/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/available_places/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/available_places/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/available_places/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/create/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/create/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/create/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/create/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/create/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/create/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owned/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owned/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/saved/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/saved/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/dashboard/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/dashboard/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/profile/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/profile/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/owner/revenues/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/owner/revenues/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/owner/revenues/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/revenues/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/owner/earnings/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/owner/earnings/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/owner/earnings/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/earnings/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/visits/requests/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/visits/requests/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/reject/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/reject/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/reject/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/reject/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/reject/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/reject/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/accept/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/accept/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/accept/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/accept/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/accept/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/owner/visits/requests/00000000-0000-4000-8000-000000000000/accept/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Method Not Allowed: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Method Not Allowed: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Method Not Allowed: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Method Not Allowed: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Method Not Allowed: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Method Not Allowed: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/save/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/save/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/save/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/save/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/save/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/save/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/unsave/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/unsave/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/unsave/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/unsave/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/unsave/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/unsave/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/confirm-availability/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/confirm-availability/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/confirm-availability/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/confirm-availability/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/confirm-availability/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/confirm-availability/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/reviews/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/reviews/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/reviews/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/reviews/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/reviews/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/reviews/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/delete/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/delete/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/delete/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/delete/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/delete/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/delete/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/statistics/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/statistics/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/statistics/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/statistics/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/statistics/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/statistics/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visibility/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/images/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/images/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/visits/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visits/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visits/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/visits/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visits/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/visits/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/received/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/received/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/requests/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/requests/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/requests/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/cancel/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/cancel/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/cancel/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/cancel/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/cancel/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/cancel/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/review/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/review/
+WARNING  django.request:log.py:253 Forbidden: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/review/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/review/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/review/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/review/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/visits/00000000-0000-4000-8000-000000000000/update/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/capture-capabilities/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/capture-capabilities/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/capture-sessions/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/available/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/available/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/available/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/available/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/available/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/available/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/unpublish/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/unpublish/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/unpublish/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/unpublish/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/unpublish/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/unpublish/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/uploads/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/uploads/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/uploads/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/uploads/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/uploads/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/uploads/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/process/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/process/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/process/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/process/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/process/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/process/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/submit-review/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/submit-review/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/submit-review/
+WARNING  django.request:log.py:253 Unauthorized: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/submit-review/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/submit-review/
+WARNING  django.request:log.py:253 Bad Request: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/submit-review/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/viewer-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/viewer-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/viewer-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/viewer-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/viewer-sessions/
+WARNING  django.request:log.py:253 Not Found: /api/v1/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/viewer-sessions/
+_______________ test_configuration_is_free_and_workspace_scoped ________________
+core_apps/features/tests/test_api.py:34: in test_configuration_is_free_and_workspace_scoped
+    assert response.data["boost_options"][0]["duration_days"] > 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range
+_____ test_repeat_seed_preserves_ids_revisions_rollout_and_unrelated_plans _____
+core_apps/features/tests/test_commerce_test_catalog.py:78: in test_repeat_seed_preserves_ids_revisions_rollout_and_unrelated_plans
+    feature = CommerceFeature.objects.get(code="priority_alerts")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/django/db/models/query.py:635: in get
+    raise self.model.DoesNotExist(
+E   core_apps.features.commerce_models.CommerceFeature.DoesNotExist: CommerceFeature matching query does not exist.
+=============================== warnings summary ===============================
+core_apps/properties/models/property.py:200
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/property.py:200: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/property.py:204
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/property.py:204: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/property.py:208
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/property.py:208: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/portfolio.py:73
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/portfolio.py:73: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/portfolio.py:121
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/portfolio.py:121: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/portfolio.py:162
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/portfolio.py:162: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/engagement.py:93
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/engagement.py:93: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit.py:222
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit.py:222: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit.py:225
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit.py:225: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:39
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:39: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:43
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:43: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:47
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:47: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/visit_parts/property_visit_review.py:51
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/visit_parts/property_visit_review.py:51: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/saved_search_visit.py:58
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/saved_search_visit.py:58: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/properties/models/availability_closure.py:15
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/models/availability_closure.py:15: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraints = [models.CheckConstraint(check=models.Q(ends_at__gt=models.F('starts_at')),
+
+core_apps/chat/models/conversation.py:49
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/chat/models/conversation.py:49: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/admin_api/models/platform_preferences.py:28
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/admin_api/models/platform_preferences.py:28: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/agreements.py:130
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/agreements.py:130: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/rental_experiences.py:44
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/rental_experiences.py:44: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/rental_experiences.py:49
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/rental_experiences.py:49: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/rental_experiences.py:141
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/rental_experiences.py:141: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:78
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:78: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:83
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:83: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:86
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:86: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:245
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:245: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/offers.py:248
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/offers.py:248: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/invoices.py:134
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/invoices.py:134: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/condition.py:58
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/condition.py:58: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/documents.py:92
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/documents.py:92: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:35
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:35: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:39
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:39: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:43
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:43: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/billing_models.py:87
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/billing_models.py:87: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/planning_models_parts/roommate_connection.py:54
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/planning_models_parts/roommate_connection.py:54: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/catalog_models.py:24
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/catalog_models.py:24: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(check=models.Q(currency="EGP", exponent=2), name="promotion_supported_money"),
+
+core_apps/features/catalog_models.py:25
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/catalog_models.py:25: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/summary_sharing.py:34
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/summary_sharing.py:34: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/application_profiles.py:106
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/application_profiles.py:106: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reservations.py:97
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reservations.py:97: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reservations.py:101
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reservations.py:101: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:40
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:40: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:75
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:75: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:118
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:118: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:122
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:122: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:190
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:190: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/student_models.py:220
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/student_models.py:220: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_models.py:174
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_models.py:174: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_models.py:178
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_models.py:178: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_models.py:318
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_models.py:318: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_contract_models.py:43
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_contract_models.py:43: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_contract_models.py:47
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_contract_models.py:47: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:68
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:68: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:73
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:73: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:76
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:76: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:108
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:108: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/reputation.py:158
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/reputation.py:158: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/transition_network_models.py:32
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/transition_network_models.py:32: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/chargebacks.py:52
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/chargebacks.py:52: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/model_parts/chargebacks.py:56
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/model_parts/chargebacks.py:56: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/company_saved_models.py:33
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/company_saved_models.py:33: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/commerce_models.py:65
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/commerce_models.py:65: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+core_apps/features/experience/models.py:66
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/experience/models.py:66: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraints = [models.CheckConstraint(
+
+core_apps/virtual_tours/models.py:68
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/virtual_tours/models.py:68: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    models.CheckConstraint(
+
+../../../../../../private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/openid/oidutil.py:105
+  /private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/openid/oidutil.py:105: DeprecationWarning: defusedxml.cElementTree is deprecated, import from defusedxml.ElementTree instead.
+    ElementTree = __import__(mod_name, None, None, ['unused'])
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0022_company_portfolio_foundations.py:131: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('building__isnull', True), ('complex__isnull', True), _connector='OR'), name='unit_has_one_direct_parent'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0022_company_portfolio_foundations.py:135: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('occupancy_capacity__isnull', True), ('occupancy_capacity__gte', 1), _connector='OR'), name='unit_capacity_positive_or_unknown'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0022_company_portfolio_foundations.py:151: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('declared_units__gte', 1)), name='building_declared_units_positive'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0043_availability_closures.py:33: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('ends_at__gt', models.F('starts_at'))), name='availability_closure_positive_range'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0014_propertyvisitreview.py:88: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0014_propertyvisitreview.py:95: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0014_propertyvisitreview.py:102: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0014_propertyvisitreview.py:109: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0010_property_engagement_and_availability.py:179: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0046_savedsearchread_itemized_savedsearchread_items_ready_and_more.py:60: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0024_portfoliochangeset_residentialmedia_and_more.py:319: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0026_alter_portfoliochangeset_options_and_more.py:19: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0026_alter_portfoliochangeset_options_and_more.py:30: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0021_planning_report_integrity.py:51: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('attended', True)), name='visit_decision_attended'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/properties/migrations/0021_planning_report_integrity.py:55: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(models.Q(('reason', ''), ('value', 'proceed')), models.Q(('value', 'decline'), models.Q(('reason', ''), _negated=True)), _connector='OR'), name='visit_decision_reason_policy'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/chat/migrations/0007_company_request_discussions.py:42: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/chat/migrations/0006_conversation_group_constraint.py:15: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/admin_api/migrations/0003_platformpreferenceaudit_platformpreferences_and_more.py:56: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0021_applicationaccessgrant_applicationprofile_and_more.py:913: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0021_applicationaccessgrant_applicationprofile_and_more.py:920: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0021_applicationaccessgrant_applicationprofile_and_more.py:929: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0053_company_tenancy.py:140: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0030_company_portfolio_foundations.py:225: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('ends_on_exclusive__gt', models.F('starts_on'))), name='assignment_valid_dates'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0030_company_portfolio_foundations.py:233: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('ends_on_exclusive__gt', models.F('starts_on'))), name='company_request_valid_dates'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0030_company_portfolio_foundations.py:237: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('headcount__gte', 1)), name='company_headcount_positive'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0060_canonical_chargeback_resolution.py:81: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('outcome__in', ['open', 'won', 'lost', 'reversed'])), name='chargeback_valid_outcome'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0060_canonical_chargeback_resolution.py:85: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('amount_minor__gt', 0)), name='chargeback_positive_amount'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0018_billing_subscriptions.py:137: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0018_billing_subscriptions.py:161: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0018_billing_subscriptions.py:168: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0018_billing_subscriptions.py:175: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0018_billing_subscriptions.py:209: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0096_experience_tools.py:110: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(models.Q(('company_request__isnull', True), ('group__isnull', False)), models.Q(('company_request__isnull', False), ('group__isnull', True)), _connector='OR'), name='experience_task_one_context'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0052_company_contract_preparation.py:92: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('valid_until__gt', models.F('valid_from'))), name='company_mandate_valid_interval'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0052_company_contract_preparation.py:96: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('limit_minor__gt', 0)), name='company_mandate_positive_limit'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0025_rentalinterest_academic_plan_and_more.py:53: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0004_owneronboardingsession_ownerpaymentprofile_and_more.py:492: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0004_owneronboardingsession_ownerpaymentprofile_and_more.py:499: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0039_rating_experience_integrations.py:284: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0039_rating_experience_integrations.py:305: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0039_rating_experience_integrations.py:316: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0012_planning_cycles.py:568: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0028_remove_campus_campus_valid_coordinates_and_more.py:19: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0062_companysavedlist_companysaveditem_and_more.py:110: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0024_academichousingplan_academicplanparticipant_and_more.py:306: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0024_academichousingplan_academicplanparticipant_and_more.py:325: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0024_academichousingplan_academicplanparticipant_and_more.py:532: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0024_academichousingplan_academicplanparticipant_and_more.py:552: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0024_academichousingplan_academicplanparticipant_and_more.py:559: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0024_academichousingplan_academicplanparticipant_and_more.py:566: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0024_academichousingplan_academicplanparticipant_and_more.py:594: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0024_academichousingplan_academicplanparticipant_and_more.py:601: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0035_reviewcase_reviewopportunity_reviewsubmission_and_more.py:251: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('overall_score__gte', 1), ('overall_score__lte', 5)), name='review_overall_1_5'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0035_reviewcase_reviewopportunity_reviewsubmission_and_more.py:267: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(models.Q(('reviewer__isnull', False), ('reviewer_company__isnull', True)), models.Q(('reviewer__isnull', True), ('reviewer_company__isnull', False)), _connector='OR'), name='review_exact_reviewer'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0035_reviewcase_reviewopportunity_reviewsubmission_and_more.py:271: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('party_a', models.F('party_b')), _negated=True), name='review_distinct_parties'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0035_reviewcase_reviewopportunity_reviewsubmission_and_more.py:275: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('closes_at__gt', models.F('opens_at'))), name='review_positive_window'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0009_alter_paymentattempt_payment_status_rentalreview_and_more.py:399: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0002_tenancyinvitation_alter_lease_options_and_more.py:151: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0002_tenancyinvitation_alter_lease_options_and_more.py:158: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0019_dashboard_promotion_catalog.py:59: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0058_canonical_company_review_party.py:28: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0027_rentalsummarygrant_and_more.py:80: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0066_commercefeature_storeaccount_storeproduct_and_more.py:458: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0066_commercefeature_storeaccount_storeproduct_and_more.py:511: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0066_commercefeature_storeaccount_storeproduct_and_more.py:569: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0037_advanced_housing_planning.py:534: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('turnover_days__gte', 1)), name='move_turnover_positive'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/features/migrations/0037_advanced_housing_planning.py:542: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(check=models.Q(('ends_on_exclusive__isnull', True), ('ends_on_exclusive__gte', models.F('starts_on')), _connector='OR'), name='asset_location_valid_dates'),
+
+core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py::TestAdminPortalFinancialsAndAudit::test_transactions_filtering_by_status_and_search
+  /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/core_apps/virtual_tours/migrations/0002_propertyvirtualtour_building_and_more.py:62: RemovedInDjango60Warning: CheckConstraint.check is deprecated in favor of `.condition`.
+    constraint=models.CheckConstraint(
+
+core_apps/admin_api/tests/test_admin_portal_kyc.py: 6 warnings
+core_apps/admin_api/tests/test_admin_portal_moderation.py: 5 warnings
+core_apps/admin_api/tests/test_admin_portal_staff_and_roles.py: 5 warnings
+core_apps/admin_api/tests/test_admin_portal_users.py: 4 warnings
+core_apps/admin_api/tests/test_analytics_periods.py: 15 warnings
+core_apps/admin_api/tests/test_audit_authority.py: 6 warnings
+core_apps/admin_api/tests/test_catalog_editor.py: 6 warnings
+core_apps/admin_api/tests/test_commerce_catalog_editor.py: 8 warnings
+core_apps/admin_api/tests/test_content_editor.py: 5 warnings
+core_apps/admin_api/tests/test_followups.py: 17 warnings
+core_apps/admin_api/tests/test_kyc_admin.py: 12 warnings
+core_apps/admin_api/tests/test_legacy_moderation_alias.py: 6 warnings
+core_apps/admin_api/tests/test_mvp_boundaries.py: 1 warning
+core_apps/admin_api/tests/test_mvp_campaigns.py: 1 warning
+core_apps/admin_api/tests/test_mvp_content.py: 9 warnings
+core_apps/admin_api/tests/test_navigation.py: 15 warnings
+core_apps/admin_api/tests/test_plan_benefit_editor.py: 6 warnings
+core_apps/admin_api/tests/test_property_type_catalog.py: 3 warnings
+core_apps/admin_api/tests/test_sprint10_boundaries.py: 7 warnings
+core_apps/admin_api/tests/test_views.py: 27 warnings
+core_apps/advertising/tests/test_advertising_api.py: 19 warnings
+core_apps/advertising/tests/test_sprint04_performance.py: 6 warnings
+core_apps/advertising/tests/test_sprint08_media_recovery.py: 1 warning
+core_apps/chat/tests/test_all_mentions_navigation.py: 1 warning
+core_apps/chat/tests/test_command_input_matrix.py: 1 warning
+core_apps/chat/tests/test_direct_media.py: 2 warnings
+core_apps/chat/tests/test_discovery.py: 4 warnings
+core_apps/chat/tests/test_forwarding.py: 6 warnings
+core_apps/chat/tests/test_group_api.py: 12 warnings
+core_apps/chat/tests/test_group_messages.py: 3 warnings
+core_apps/chat/tests/test_inbox_actions.py: 7 warnings
+core_apps/chat/tests/test_legacy_send_policy.py: 2 warnings
+core_apps/chat/tests/test_mvp_direct_tools.py: 1 warning
+core_apps/chat/tests/test_mvp_forward_media.py: 1 warning
+core_apps/chat/tests/test_participant_disclosure.py: 3 warnings
+core_apps/chat/tests/test_private_workspace_preferences.py: 2 warnings
+core_apps/chat/tests/test_productivity.py: 2 warnings
+core_apps/chat/tests/test_property_sharing.py: 2 warnings
+core_apps/chat/tests/test_reactions_mentions.py: 2 warnings
+core_apps/chat/tests/test_rental_moderation.py: 3 warnings
+core_apps/chat/tests/test_rental_policy_commitments.py: 7 warnings
+core_apps/chat/tests/test_rich_attachments.py: 13 warnings
+core_apps/chat/tests/test_sprint04_legacy_history.py: 5 warnings
+core_apps/chat/tests/test_sprint04_performance.py: 3 warnings
+core_apps/chat/tests/test_sprint09_communication.py: 4 warnings
+core_apps/chat/tests/test_transcript_segments.py: 2 warnings
+core_apps/chat/tests/test_unread_consistency.py: 4 warnings
+core_apps/chat/tests/test_views.py: 19 warnings
+core_apps/chat/tests/test_voice_transcription.py: 2 warnings
+core_apps/chat/tests/test_workspace_group_scope.py: 1 warning
+core_apps/chat/tests/test_workspace_inbox.py: 2 warnings
+core_apps/common/test_api_budgets.py: 14 warnings
+core_apps/common/test_app_associations.py: 2 warnings
+core_apps/common/test_cookie_origin.py: 8 warnings
+core_apps/common/test_managed_content.py: 2 warnings
+core_apps/common/test_mobile_locale.py: 3 warnings
+core_apps/common/test_mvp_help_truth.py: 2 warnings
+core_apps/common/test_pages_views.py: 5 warnings
+core_apps/common/test_paymob_callbacks.py: 11 warnings
+core_apps/common/test_rolling_writer_compatibility.py: 1 warning
+core_apps/common/test_route_contracts.py: 189 warnings
+core_apps/common/test_sprint10_adapters.py: 1 warning
+core_apps/features/tests/test_academic_request_versions.py: 2 warnings
+core_apps/features/tests/test_advanced_canonical_execution.py: 9 warnings
+core_apps/features/tests/test_advanced_company_passport.py: 3 warnings
+core_apps/features/tests/test_advanced_company_passport_v2.py: 4 warnings
+core_apps/features/tests/test_advanced_execution.py: 10 warnings
+core_apps/features/tests/test_advanced_execution_notifications.py: 5 warnings
+core_apps/features/tests/test_advanced_planning_notifications.py: 4 warnings
+core_apps/features/tests/test_advanced_tender_construction.py: 5 warnings
+core_apps/features/tests/test_advanced_tenders.py: 13 warnings
+core_apps/features/tests/test_api.py: 5 warnings
+core_apps/features/tests/test_audit_change_terms.py: 5 warnings
+core_apps/features/tests/test_audit_disputes.py: 5 warnings
+core_apps/features/tests/test_audit_documents.py: 7 warnings
+core_apps/features/tests/test_audit_private_changes.py: 7 warnings
+core_apps/features/tests/test_audit_rental_contracts.py: 2 warnings
+core_apps/features/tests/test_billing_contract_guards.py: 7 warnings
+core_apps/features/tests/test_billing_rental_projection.py: 2 warnings
+core_apps/features/tests/test_billing_subscriptions.py: 7 warnings
+core_apps/features/tests/test_business_policies.py: 15 warnings
+core_apps/features/tests/test_business_policy_company_adjustment.py: 1 warning
+core_apps/features/tests/test_business_policy_private_export.py: 23 warnings
+core_apps/features/tests/test_cancellation_revision.py: 2 warnings
+core_apps/features/tests/test_canonical_company_reputation.py: 5 warnings
+core_apps/features/tests/test_change_base_conflicts.py: 4 warnings
+core_apps/features/tests/test_change_recovery.py: 6 warnings
+core_apps/features/tests/test_change_signature_notes.py: 3 warnings
+core_apps/features/tests/test_change_versions.py: 6 warnings
+core_apps/features/tests/test_chargeback_company.py: 2 warnings
+core_apps/features/tests/test_chargeback_deposit_payable.py: 5 warnings
+core_apps/features/tests/test_chargeback_resolution.py: 27 warnings
+core_apps/features/tests/test_checkout_absence_recovery.py: 7 warnings
+core_apps/features/tests/test_closure_case_authority.py: 4 warnings
+core_apps/features/tests/test_closure_continuation.py: 4 warnings
+core_apps/features/tests/test_closure_maintenance.py: 8 warnings
+core_apps/features/tests/test_closure_operator_console.py: 1 warning
+core_apps/features/tests/test_closure_status_command.py: 1 warning
+core_apps/features/tests/test_combined_invoice_refunds.py: 2 warnings
+core_apps/features/tests/test_command_input_matrix.py: 87 warnings
+core_apps/features/tests/test_commerce_expiration.py: 12 warnings
+core_apps/features/tests/test_commerce_test_catalog.py: 2 warnings
+core_apps/features/tests/test_commerce_v1.py: 23 warnings
+core_apps/features/tests/test_company_closure_events.py: 3 warnings
+core_apps/features/tests/test_company_continuation_capabilities.py: 28 warnings
+core_apps/features/tests/test_company_continuation_resolution.py: 9 warnings
+  /private/tmp/sprint1-20261117/app-env/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/staticfiles/
+    mw_instance = middleware(adapted_handler)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED core_apps/advertising/tests/test_advertising_api.py::TestAdvertisingAPI::test_public_plan_list_is_ordered_localized_and_enveloped
+FAILED core_apps/advertising/tests/test_advertising_api.py::TestAdvertisingAPI::test_create_replay_conflict_recovery_and_owner_isolation
+FAILED core_apps/advertising/tests/test_advertising_api.py::TestAdvertisingAPI::test_rejects_fake_image_and_enforces_destination_ownership
+FAILED core_apps/advertising/tests/test_advertising_api.py::TestAdvertisingAPI::test_property_offer_activation_payment_replay_and_public_feed
+FAILED core_apps/advertising/tests/test_advertising_api.py::TestAdvertisingAPI::test_expired_rows_are_hidden_without_waiting_for_worker
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_informational_payment_snapshot_recovery_and_expired_retry[en]
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_informational_payment_snapshot_recovery_and_expired_retry[ar]
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_payment_revalidates_media_and_destination[missing_media]
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_payment_revalidates_media_and_destination[transferred]
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_payment_revalidates_media_and_destination[hidden]
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_payment_revalidates_media_and_destination[archived]
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_payment_failure_rolls_back_activation_and_same_operation_can_retry
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_public_media_and_feed_share_live_eligibility[future]
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_public_media_and_feed_share_live_eligibility[placement]
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_public_media_and_feed_share_live_eligibility[media]
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_public_media_and_feed_share_live_eligibility[owner]
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_public_media_and_feed_share_live_eligibility[payment]
+FAILED core_apps/advertising/tests/test_advertising_api.py::test_existing_audit_ad_media_recovery_and_mock_payment_activation
+FAILED core_apps/common/test_route_contracts.py::test_route_family_contract[api-advertising]
+FAILED core_apps/common/test_route_contracts.py::test_route_family_contract[api-pages]
+FAILED core_apps/common/test_route_contracts.py::test_route_family_contract[api-properties]
+FAILED core_apps/features/tests/test_api.py::test_configuration_is_free_and_workspace_scoped
+FAILED core_apps/features/tests/test_commerce_test_catalog.py::test_repeat_seed_preserves_ids_revisions_rollout_and_unrelated_plans
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/encodings/utf_8.py:15: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+23 failed, 1403 passed, 2 skipped, 2 xfailed, 1068 warnings in 152.27s (0:02:32)
+make: *** [test-baseline-mvp] Error 2

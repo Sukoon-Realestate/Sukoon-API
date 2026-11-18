@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "configuration_valid": true,
+  "flavor": "dev",
+  "build": false,
+  "authentication_request": false,
+  "upload": false,
+  "invitation": false,
+  "signing_file_write": false
+}

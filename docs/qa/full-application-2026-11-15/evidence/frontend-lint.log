@@ -1,0 +1,164 @@
+
+> frontend@0.1.0 lint
+> eslint
+
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/scripts/test-api-contract.cjs
+  1:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/scripts/test-payouts-contract.cjs
+  1:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/scripts/test-refunds-contract.cjs
+  1:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/components/admin/pages/properties/[id]/page.tsx
+  115:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/components/admin/pages/reports/chat-policy/PolicyMedia.tsx
+  26:79  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/components/admin/pages/users/[id]/page.tsx
+  129:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/components/properties/PropertyReview.tsx
+  81:170  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/components/security/StaffIdentitySetup.tsx
+  30:10  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/components/security/StaffIdentitySetup.tsx:30:10
+  28 |   useEffect(() => {
+  29 |     const controller = new AbortController();
+> 30 |     void refresh(controller.signal).catch(failure => {
+     |          ^^^^^^^ Avoid calling setState() directly within an effect
+  31 |       if (!controller.signal.aborted) setError(failure instanceof Error ? failure.message : 'تعذّر تحميل حالة الموظفين.');
+  32 |     });
+  33 |     return () => controller.abort();  react-hooks/set-state-in-effect
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/components/ui/IdentityImage.tsx
+  38:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  40:28  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/lib/api/client.ts
+  11:10  error    Unexpected any. Specify a different type                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  15:37  error    Unexpected any. Specify a different type                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  77:20  error    Unexpected any. Specify a different type                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  97:11  warning  Do not use `window.location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/lib/api/types.ts
+  188:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/admin-confirmation.test.cjs
+   1:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   2:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   4:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  19:81  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/admin-navigation.test.cjs
+  1:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/analytics.test.cjs
+   1:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   2:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   4:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   6:15  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   7:34  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  44:35  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/campaign-audience.test.cjs
+  1:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/financial-transactions-page.test.cjs
+  1:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  6:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/live-authority.test.cjs
+   3:14  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   4:16  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   5:12  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   6:14  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   7:12  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   8:12  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+  31:5   error  Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable  @next/next/no-assign-module-variable
+  54:5   error  Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable  @next/next/no-assign-module-variable
+  80:5   error  Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable  @next/next/no-assign-module-variable
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/property-export.test.cjs
+  1:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/review-loading.test.cjs
+  1:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  6:15  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/support-information.test.cjs
+   1:14  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   2:16  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   3:12  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   4:12  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   5:12  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+  12:71  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+  25:3   error  Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable  @next/next/no-assign-module-variable
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/system-health.test.cjs
+  1:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  5:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  6:15  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  7:34  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/tests/tour-review-reason.test.cjs
+   1:14  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   2:16  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   3:12  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   4:12  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+   5:12  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+  13:39  error  A `require()` style import is forbidden                                                                  @typescript-eslint/no-require-imports
+  40:3   error  Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable  @next/next/no-assign-module-variable
+
+✖ 98 problems (91 errors, 7 warnings)
+

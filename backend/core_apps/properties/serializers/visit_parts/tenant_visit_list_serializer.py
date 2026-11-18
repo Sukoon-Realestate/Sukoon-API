@@ -50,7 +50,7 @@ class TenantVisitListSerializer(serializers.ModelSerializer):
 class VisitTenantSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source="get_full_name", read_only=True)
     # ? DRF returns None here if the tenant has no profile/avatar
-    avatar = CloudinarySerializerField(source="profile.avatar", read_only=True)
+    avatar = CloudinarySerializerField(source="profile.avatar_url", read_only=True)
     phone_number = serializers.SerializerMethodField()
     masked_phone_number = serializers.SerializerMethodField()
     is_phone_revealed = serializers.SerializerMethodField()

@@ -966,9 +966,10 @@ def test_checkout_recovery_requires_current_company_payer(signed_agreement):
 def test_operator_authority_review_is_independent_and_admin_form_uses_same_command(
     cycle, client, settings
 ):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     import uuid
     from django.urls import reverse
     from core_apps.features.models import CompanyMandate

@@ -1,0 +1,16 @@
+{
+  "test_cases": {
+    "success": 344
+  },
+  "loader_events": {
+    "success": 1
+  },
+  "terminal_event": {
+    "success": true,
+    "type": "done",
+    "time": 82021
+  },
+  "active_at_end": [],
+  "recorded_seconds": 82.02,
+  "failed_records": 0
+}

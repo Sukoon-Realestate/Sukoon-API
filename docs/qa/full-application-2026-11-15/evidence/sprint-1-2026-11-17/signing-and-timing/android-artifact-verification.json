@@ -1,0 +1,24 @@
+{
+  "artifact": "existing app-dev-release.apk",
+  "artifact_sha256": "8ab647f77206dc3b583e699d941b95bd0b5eff4538eb94b2d654348fc8c6844d",
+  "artifact_bytes": 194004534,
+  "apksigner_exit": 0,
+  "verified": true,
+  "certificate_sha256": "f3b9d267e809108549aefcb9e94b50fa85951b93c3b10d0168340c2a305a55a8",
+  "matches_configured_keystore": true,
+  "package": "com.app.sokoon.real.estate.dev",
+  "version_code": "1794830268",
+  "version_name": "1.0.0",
+  "schemes": [
+    "Verified using v1 scheme (JAR signing): false",
+    "Verified using v2 scheme (APK Signature Scheme v2): true",
+    "Verified using v3 scheme (APK Signature Scheme v3): false",
+    "Verified using v3.1 scheme (APK Signature Scheme v3.1): false",
+    "Verified using v4 scheme (APK Signature Scheme v4): false"
+  ],
+  "limits": [
+    "This is an existing dev-release artifact, not a fresh build from the current dirty source.",
+    "No prod artifact, Play signing certificate, public listing or installation/device acceptance is established.",
+    "No upload, deployment or release build was performed in this verification."
+  ]
+}

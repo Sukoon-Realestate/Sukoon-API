@@ -170,9 +170,10 @@ def test_operator_prepares_named_review_without_proxy_consent_or_early_closure(
 def test_operator_web_form_to_ownership_completion_preserves_original_creditor(
     active_agreement, settings
 ):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     cycle, item = active_agreement
     case = request(cycle, item)
     agent, new_owner = operator("support"), incoming(cycle)

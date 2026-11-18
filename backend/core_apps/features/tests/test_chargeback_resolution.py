@@ -522,9 +522,10 @@ def test_admin_review_is_reachable_and_does_not_execute_money(
 ):
     from django.urls import reverse
 
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     item = disputed
     fact(item, "decided", outcome="won")
     paid = replacement(item)
@@ -727,9 +728,10 @@ def test_all_chargeback_admin_history_requires_current_finance_and_independence(
     from core_apps.users.models import User
     from core_apps.admin_api.models import StaffProfile
 
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     item = disputed
     fact(item, "decided", outcome="won")
     paid = replacement(item)

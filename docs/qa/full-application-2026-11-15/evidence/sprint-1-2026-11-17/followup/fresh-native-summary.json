@@ -1,0 +1,246 @@
+{
+  "fresh_flutter_run": true,
+  "build_seconds": 59.2,
+  "mode": "debug",
+  "flavor": "dev",
+  "platform": "iOS 27.0 iPhone 18 Pro simulator",
+  "journeys": [
+    {
+      "locale": "English",
+      "route": "Accepted inventory \u2192 Add property \u2192 Single residential unit \u2192 empty Next \u2192 Back \u2192 Back",
+      "result": "Returned to Accepted inventory"
+    },
+    {
+      "locale": "English",
+      "route": "Same journey with immediate validation/Back and repeated Back input",
+      "result": "First immediate Back left validation visible temporarily; subsequent Back returned through mode selection to Accepted inventory"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": 1,
+      "result": {
+        "type": "Success"
+      }
+    },
+    {
+      "id": 2,
+      "result": {
+        "type": "Success"
+      }
+    },
+    {
+      "id": 3,
+      "result": {
+        "type": "Success"
+      }
+    },
+    {
+      "id": 4,
+      "result": {
+        "type": "Success"
+      }
+    }
+  ],
+  "event_counts": {
+    "Flutter.FrameworkInitialization": 1,
+    "provider:provider_list_changed": 11,
+    "Flutter.ServiceExtensionStateChanged": 2,
+    "Flutter.Frame": 6096,
+    "Flutter.FirstFrame": 1,
+    "Flutter.Navigation": 16,
+    "provider:provider_changed": 24,
+    "Flutter.ImageSizesForFrame": 2,
+    "WriteEvent": 58,
+    "Logging": 266
+  },
+  "flutter_errors": [],
+  "navigation": [
+    {
+      "utc": "2026-11-17T08:14:46.056000+00:00",
+      "data": {
+        "route": {
+          "description": "PageRouteBuilder<Object?>",
+          "settings": {
+            "name": "HomeScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:15:18.584000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(ProfileSettingsScreen)",
+          "settings": {
+            "name": "ProfileSettingsScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:15:24.357000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(LanguageSelectionScreen)",
+          "settings": {
+            "name": "LanguageSelectionScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:15:32.235000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(LanguageSelectionScreen)",
+          "settings": {
+            "name": "LanguageSelectionScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:15:48.510000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(ProfileSettingsScreen)",
+          "settings": {
+            "name": "ProfileSettingsScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:16:00.476000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<bool>(OwnerCreationScreen)",
+          "settings": {
+            "name": "OwnerCreationScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:16:05.459000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(OwnerPropertyFlowScreen)",
+          "settings": {
+            "name": "OwnerPropertyFlowScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:16:16.460000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(OwnerPropertyFlowScreen)",
+          "settings": {
+            "name": "OwnerPropertyFlowScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:16:20.800000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<bool>(OwnerCreationScreen)",
+          "settings": {
+            "name": "OwnerCreationScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:16:27.772000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<bool>(OwnerCreationScreen)",
+          "settings": {
+            "name": "OwnerCreationScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:16:52.430000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(OwnerPropertyFlowScreen)",
+          "settings": {
+            "name": "OwnerPropertyFlowScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:17:07.972000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(OwnerPropertyFlowScreen)",
+          "settings": {
+            "name": "OwnerPropertyFlowScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:17:13.705000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<bool>(OwnerCreationScreen)",
+          "settings": {
+            "name": "OwnerCreationScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:17:53.447000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(ProfileSettingsScreen)",
+          "settings": {
+            "name": "ProfileSettingsScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:17:57.832000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(LanguageSelectionScreen)",
+          "settings": {
+            "name": "LanguageSelectionScreen"
+          }
+        }
+      }
+    },
+    {
+      "utc": "2026-11-17T08:18:03.484000+00:00",
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(LanguageSelectionScreen)",
+          "settings": {
+            "name": "LanguageSelectionScreen"
+          }
+        }
+      }
+    }
+  ],
+  "original_locale_restored": "Arabic",
+  "limits": [
+    "The original persistent blank error screen was not reproduced; MOB-002 remains open.",
+    "No navigation/global handler product code changed.",
+    "The captured session disconnected after both journeys and locale restoration; a separate local Flutter run subsequently replaced the simulator build.",
+    "The post-journey installed executable did not match the executable hash saved at capture start; exact installed snapshot continuity cannot be certified.",
+    "Profile mode is unsupported on this iOS simulator; no physical mobile device/release signing acceptance.",
+    "Native reduced-motion and fresh profile/release journey remain open.",
+    "Raw private app/debug logs remain outside the repository."
+  ]
+}

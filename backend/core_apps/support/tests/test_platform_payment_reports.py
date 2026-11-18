@@ -206,9 +206,10 @@ def test_assigned_finance_console_has_reachable_read_only_report(
 
     # Render the real admin view without requiring a production collectstatic
     # manifest in this isolated test environment.
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     another_user.is_staff = another_user.is_verified = True
     another_user.save()
     StaffProfile.objects.create(user=another_user, role_name="financial_approver")
@@ -240,9 +241,10 @@ def test_anonymous_admin_login_does_not_query_assigned_private_reports(
     from django.contrib.auth.models import AnonymousUser
     from core_apps.support.services.payment_reports import readable_tickets
 
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     assert not readable_tickets(AnonymousUser()).exists()
     response = client.get(reverse("admin:login"))
     assert response.status_code == 200

@@ -1,0 +1,85 @@
+✖ audit 503 has visible failure and retry, never a successful empty table (39.567083ms)
+✖ populated audit pages remain reachable; CSV explicitly exports only the displayed successful page (9.4ms)
+✖ filter change hides prior rows immediately and late responses cannot replace current results (8.762625ms)
+✔ late failed requests cannot write component state after unmount (8.556ms)
+✖ malformed pagination is an error rather than a successful empty response (10.042625ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 1
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 204.689709
+
+✖ failing tests:
+
+test at tests/audit-logs.test.cjs:77:1
+✖ audit 503 has visible failure and retry, never a successful empty table (39.567083ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(nodes(tree).some(n => n.props.role === 'alert'))
+  
+      at TestContext.<anonymous> (<api-checkout>/frontend/tests/audit-logs.test.cjs:79:33)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/audit-logs.test.cjs:87:1
+✖ populated audit pages remain reachable; CSV explicitly exports only the displayed successful page (9.4ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (<api-checkout>/frontend/tests/audit-logs.test.cjs:89:43)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/audit-logs.test.cjs:97:1
+✖ filter change hides prior rows immediately and late responses cannot replace current results (8.762625ms)
+  AssertionError [ERR_ASSERTION]: The input was expected to not match the regular expression /Action 1/. Input:
+  
+  'كل الإجراءاتKYCعقاراتمستخدموننظامتصدير CSVالوقتالإجراءالنوعالمستهدفالمشرف2026-11-17 10:00Action 1نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 2نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 3نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 4نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 5نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 6نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 7نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 8نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 9نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 10نظامSynthetic recordSynthetic staff'
+  
+      at TestContext.<anonymous> (<api-checkout>/frontend/tests/audit-logs.test.cjs:100:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'كل الإجراءاتKYCعقاراتمستخدموننظامتصدير CSVالوقتالإجراءالنوعالمستهدفالمشرف2026-11-17 10:00Action 1نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 2نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 3نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 4نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 5نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 6نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 7نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 8نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 9نظامSynthetic recordSynthetic staff2026-11-17 10:00Action 10نظامSynthetic recordSynthetic staff',
+    expected: /Action 1/,
+    operator: 'doesNotMatch',
+    diff: 'simple'
+  }
+
+test at tests/audit-logs.test.cjs:112:1
+✖ malformed pagination is an error rather than a successful empty response (10.042625ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(nodes(tree).some(n => n.props.role === 'alert'))
+  
+      at TestContext.<anonymous> (<api-checkout>/frontend/tests/audit-logs.test.cjs:114:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

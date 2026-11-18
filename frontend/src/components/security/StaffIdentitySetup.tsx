@@ -27,7 +27,9 @@ export function StaffIdentitySetup({ enabled }: { enabled: boolean }) {
   }
   useEffect(() => {
     const controller = new AbortController();
-    void refresh(controller.signal).catch(failure => {
+    void fetchStaffIdentities(controller.signal).then(result => {
+      if (!controller.signal.aborted) { setItems(result.results); setLoaded(true); }
+    }).catch(failure => {
       if (!controller.signal.aborted) setError(failure instanceof Error ? failure.message : 'تعذّر تحميل حالة الموظفين.');
     });
     return () => controller.abort();
